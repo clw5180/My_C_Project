@@ -1,0 +1,3 @@
+rtdbintf.dll和ACE.dll：
+for AppmgrSyncAbort(PROCESSNAME);  // 注册 appmgr, 参数为进程名
+但是调试不通过，应该要配合pmanager，故调试时可以屏蔽

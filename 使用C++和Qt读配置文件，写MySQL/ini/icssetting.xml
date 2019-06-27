@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section description="xxx系统参数" key="xxx">
+ <section description="高级应用" key="app_senr"/>
+ <section description="专业应用" key="app_spec"/>
+ <section description="数据通信平台" key="plat_comm"/>
+ <section description="全局信息" key="plat_global">
+  <section description="应用系统" key="appsystem">
+   <item description="应用名称" key="xxx" modify="" value="0" type=""/>
+   <item description="系统名称" key="sysname" modify="" value="xxx电网储能辅助调度系统" type=""/>
+   <item description="电网类型名称" key="smgtypename" modify="" value="xxx电网储能辅助调度系统" type=""/>
+   <item description="厂站类型名称" key="stationtypename" modify="" value="储能配电室" type=""/>
+   <item description="系统分类" key="systype" modify="" value="1000" type=""/>
+   <item description="是否为服务器端" key="serverflag" modify="" value="1" type=""/>
+   <item description="是否使用多实时库" key="multifamily" modify="" value="0" type=""/>
+  </section>
+  <section description="系统配置信息" key="configure">
+   <item description="是否双历史库" key="doublehisdb" modify="true" value="false" type="Bool"/>
+   <item description="是否支持I区III区数据同步" key=" partitionsyn" modify="true" value="false" type="Bool"/>
+   <item description="是否双机" key="doublehost" modify="true" value="false" type="Bool"/>
+   <item description="是否双网" key="doublenet" modify="true" value="false" type="Bool"/>
+  </section>
+  <section description="服务器1信息" key="server1">
+   <item description="主机名" key="hostname" modify="true" value="host66" type="String"/>
+   <item description="IP1" key="ip1" modify="true" value="10.201.130.235" type="String"/>
+   <item description="IP2" key="ip2" modify="true" value="" type="String"/>
+  </section>
+  <section description="服务器2信息" key="server2">
+   <item description="主机名" key="hostname" modify="true" value="" type="String"/>
+   <item description="IP1" key="ip1" modify="true" value="" type="String"/>
+   <item description="IP2" key="ip2" modify="true" value="" type="String"/>
+  </section>
+  <section description="数据库配置" key="database">
+   <section description="历史库" key="hisdb">
+    <section description="历史库1配置" key="hisdb1">
+     <item description="连接参数" key="connectoptions" modify="" value="" type=""/>
+     <item description="数据库驱动" key="driver" modify="" value="QMYSQL3" type=""/>
+     <item description="数据库服务器1(mysql)" key="hostname" modify="" value="127.0.0.1" type=""/>
+     <item description="数据库服务器2(mysql)" key="hostname_2" modify="" value="" type=""/>
+     <item description="访问密码" key="password" modify="" value="9C9D64C20BECB378" type=""/>
+     <item description="数据库服务端口(mysql)" key="port" modify="" value="3306" type=""/>
+     <item description="oracle服务名，mysql数据库名称，或者使用odbc时连接数据库服务器1的数据源）" key="sername" modify="" value="xxx8000" type=""/>
+     <item description="使用odbc时连接数据库服务器2的数据源" key="sername_2" modify="" value="" type=""/>
+     <item description="用户名" key="username" modify="" value="root" type=""/>
+     <item description="数据库字符类型" key="charactertype" modify="false" value="UTF8" type=""/>
+    </section>
+    <section description="历史库2配置" key="hisdb2">
+     <item description="连接参数" key="connectoptions" modify="" value="" type=""/>
+     <item description="数据库驱动" key="driver" modify="" value="" type=""/>
+     <item description="数据库服务器1(mysql)" key="hostname" modify="" value="" type=""/>
+     <item description="数据库服务器2(mysql)" key="hostname_2" modify="" value="" type=""/>
+     <item description="访问密码" key="password" modify="" value="" type=""/>
+     <item description="数据库服务端口(mysql)" key="port" modify="" value="" type=""/>
+     <item description="oracle服务名，mysql数据库名称，或者使用odbc时连接数据库服务器1的数据源）" key="sername" modify="" value="" type=""/>
+     <item description="使用odbc时连接数据库服务器2的数据源" key="sername_2" modify="" value="" type=""/>
+     <item description="用户名" key="username" modify="" value="" type=""/>
+     <item description="数据库字符类型" key="charactertype" modify="false" value="UTF8" type=""/>
+    </section>
+   </section>
+   <section description="模型数据库" key="modeldb">
+    <item description="连接参数" key="connectoptions" modify="" value="" type=""/>
+    <item description="数据库驱动" key="driver" modify="" value="QMYSQL3" type=""/>
+    <item description="数据库服务器1(mysql)" key="hostname" modify="" value="127.0.0.1" type=""/>
+    <item description="数据库服务器2(mysql)" key="hostname_2" modify="" value="" type=""/>
+    <item description="访问密码9C9D64C20BECB378" key="password" modify="" value="9C9D64C20BECB378" type=""/>
+    <item description="数据库服务端口(mysql)" key="port" modify="" value="5236" type=""/>
+    <item description="oracle服务名，mysql数据库名称，或者使用odbc时连接数据库服务器1的数据源）" key="sername" modify="" value="xxx8000" type=""/>
+    <item description="使用odbc时连接数据库服务器2的数据源" key="sername_2" modify="" value="" type=""/>
+    <item description="用户名" key="username" modify="" value="root" type=""/>
+    <item description="" key="ip" modify="false" value="10.201.130.235" type=""/>
+    <item description="" key="updatertdb" modify="false" value="1" type=""/>
+    <item description="" key="family" modify="false" value="SCADA" type=""/>
+    <item description="数据库字符类型" key="charactertype" modify="false" value="UTF8" type=""/>
+   </section>
+   <section description="实时数据库" key="rtdb">
+    <section description="组织结构" key="schema">
+     <item description="一级实时库应用名" key="appname" modify="" value="scada" type=""/>
+     <item description="一级实时库名字" key="dbname" modify="" value="scada" type=""/>
+     <item description="应用组名称" key="familyname" modify="" value="scada" type=""/>
+     <item description="是否采用多级实时库" key="multiclone" modify="" value="false" type=""/>
+     <item description="二级实时库应用名" key="subappname" modify="" value="subdata" type=""/>
+     <item description="二级实时库名字" key="subdbname" modify="" value="subdata" type=""/>
+     <item description="从该表开始分级" key="subtablename" modify="" value="PL" type=""/>
+    </section>
+   </section>
+  </section>
+  <section description="系统路径信息" key="path">
+   <item description="报表依赖路径" key="icscbinpath" modify="" value="/home/ics8000/cbin" type=""/>
+   <item description="实时库存储路径" key="rtdbinitfile" modify="" value="/home/ics8000/cbin/xdb" type=""/>
+   <item description="xcore专用目录" key="xcoreprivate" modify="" value="/home/ics8000/cbin/xdb" type=""/>
+  </section>
+  <section description="系统版本信息" key="version">
+   <item description="主版本号" key="major version" modify="" value="1" type=""/>
+   <item description="次版本号" key="minor version" modify="" value="00" type=""/>
+  </section>
+ </section>
+ <section description="SCADA平台" key="plat_scada">
+  <section description="事件与报警" key="alarm">
+   <item description="是否接受角色" key="acceptrole" modify="" value="false" type=""/>
+   <item description="历史报警存储是否双机" key="hdbdoubleserver" modify="" value="false" type=""/>
+   <item description="历史报警确认回溯时间(基于确认时间, 秒)" key="hisackbackspan" modify="" value="43200" type=""/>
+   <item description="实时报警缓存队列长度上限" key="maxcount_alarm" modify="" value="5000" type=""/>
+   <item description="历史报警缓存队列长度上限" key="maxcount_hisalarm" modify="" value="10000" type=""/>
+   <section description="报警浏览界面" key="alarmview">
+    <item description="是否访问本地实时库" key="rtdblocal" modify="" value="true" type=""/>
+   </section>
+  </section>
+  <section description="scada控制服务" key="control">
+   <section description="公有配置" key="common">
+    <item description="下拉列表框大小限制" key="comboboxsizelimit" modify="" value="20" type=""/>
+    <item description="启用控制台日志" key="consolelog_open" modify="" value="0" type=""/>
+    <item description="scada控制使用的消息类型" key="controlmsgtype" modify="" value="110" type=""/>
+    <item description="启用文本日志" key="filelog_open" modify="" value="0" type=""/>
+    <item description="监护对话框自动消失时间" key="guardiandlgautohidet" modify="" value="120" type=""/>
+    <item description="监护机名称" key="guardianwkstation" modify="" value="host66" type=""/>
+    <item description="监护机2名称" key="guardianwkstation2" modify="" value="host66" type=""/>
+    <item description="是否访问本地实时库" key="rtdblocal" modify="" value="true" type=""/>
+    <item description="遥控对话框自动消失时间" key="telectrldlgautohidet" modify="" value="60" type=""/>
+    <item description="对话框字体大小" key="telectrldlgfontsz" modify="" value="10" type=""/>
+    <item description="对话框最小宽度" key="telectrldlgminw" modify="" value="400" type=""/>
+    <item description="控制客户端版本号" key="ctrlversion" modify="" value="1.1" type=""/>
+    <item description="" key="user_auth_close" modify="" value="false" type=""/>
+   </section>
+   <section description="连接管理器配置" key="connection">
+    <item description="clt链接测试间隔时间(秒)" key="c_cnn_interval" modify="" value="30" type=""/>
+    <item description="clt最大链接测试次数" key="c_max_inrttimes" modify="" value="8" type=""/>
+   </section>
+  </section>
+  <section description="数据转发" key="dataexchange">
+   <item description="104转发" key="104de" modify="" value="104de" type=""/>
+   <item description="五防转发" key="fivedefense" modify="" value="fivedefense" type=""/>
+   <section description="104数据转发配置" key="104de">
+    <item description="参数" key="args" modify="" value="-sockaddr 0.0.0.0:2804" type=""/>
+    <item description="classname" key="classname" modify="" value="commdataexchange" type=""/>
+    <item description="接口名称" key="interfacename" modify="" value="iec104" type=""/>
+    <item description="PE库名称" key="lib" modify="" value="commdataexchange" type=""/>
+    <item description="协议名称" key="protocol" modify="" value="iec104" type=""/>
+    <item description="远动转发" key="tablename" modify="" value="transyd" type=""/>
+   </section>
+   <section description="五防数据转发配置" key="fivedefense">
+    <item description="遥测周期发送时间间隔（分钟）" key="analogspan" modify="" value="1" type=""/>
+    <item description="classname" key="classname" modify="" value="commdataexchange" type=""/>
+    <item description="接口名称" key="interfacename" modify="" value="fivedefense" type=""/>
+    <item description="PE库名称" key="lib" modify="" value="fivedefense" type=""/>
+    <item description="协议名称" key="protocol" modify="" value="fivedefense" type=""/>
+    <item description="遥信周期发送时间间隔（分钟）" key="statusspan" modify="" value="1" type=""/>
+    <item description="五防转发" key="tablename" modify="" value="sctofd" type=""/>
+   </section>
+  </section>
+  <section description="scada日志" key="detaillog">
+   <item description="累加量数据处理服务" key="accumproc" modify="" value="false" type=""/>
+   <item description="模拟量数据处理服务" key="analogproc" modify="" value="false" type=""/>
+   <item description="状态量数据处理服务" key="statusproc" modify="" value="false" type=""/>
+   <item description="微电网数据处理服务" key="scadasrv" modify="" value="true" type=""/>
+   <item description="自动策略控制信息" key="autoctrl" modify="" value="false" type=""/>
+   <item description="有功平滑出力控制信息" key="smoothlog" modify="" value="false" type=""/>
+  </section>
+  <section description="scadasrv加载的数据处理模块" key="scadasrv">
+   <item description="加载遥脉数据处理功能" key="accumuproc" modify="" value="true" type=""/>
+   <item description="加载遥测数据处理功能" key="analogproc" modify="" value="true" type=""/>
+   <item description="加载遥控遥调处理功能" key="ctrlserver" modify="" value="true" type=""/>
+   <item description="加载虚点计算处理功能" key="dummycalc" modify="" value="true" type=""/>
+   <item description="功率平衡模拟测试功能" key="smgtest" modify="" value="false" type=""/>
+   <item description="加载事件量数据处理功能" key="soeproc" modify="" value="true" type=""/>
+   <item description="加载遥信数据处理功能" key="statusproc" modify="" value="true" type=""/>
+   <item description="发电机单位调节功率标幺值KG*" key="genefreqslope" modify="" value="25" type=""/>
+   <item description="负荷静态频率响应特性标幺值KL*" key="loadfreqslope" modify="" value="1" type=""/>
+   <item description="电网系统额定频率值Fn" key="ratefrequency" modify="" value="50.0" type=""/>
+   <item description="加载微电网应用处理功能" key="smgproc" modify="" value="true" type=""/>
+   <item description="二次调频模拟测试功能" key="freqtest" modify="" value="false" type=""/>
+   <item description="是否加载五防装置处理功能" key="fdproc" modify="" value="true" type=""/>
+   <item description="投DG的负载率递减百分比[整数]" key="deldrate" modify="" value="0" type=""/>
+   <item description="自动策略是否等待结果返回" key="autoctrlwait" modify="" value="false" type=""/>
+   <item description="自动策略检测结果变化的等待时间(秒)" key="autoctrltime" modify="" value="20" type=""/>
+   <item description="前置采集数据时间是否检测不能超出当前时间过长" key="cmpcurtime" modify="" value="false" type=""/>
+   <item description="自动策略控制操作过程是否保存" key="saveautoctrlact" modify="" value="true" type=""/>
+   <item description="多源模拟量同一批次上送时间最大间隔（秒）" key="twoanalograwspan" modify="" value="10" type=""/>
+   <item description="前置采集遥信量是否检测采集时间的合理性" key="ckstatustime" modify="" value="false" type=""/>
+   <item description="AGC_AVC策略是否检测关键值变化" key="ckagvcvaluechange" modify="" value="false" type=""/>
+   <item description="充电损耗对基本厂用电的比例" key="chargelossrate" modify="" value="0.75" type=""/>
+   <item description="放电时增加的目标功率损耗比例" key="dischrglossrate" modify="" value="0.022" type=""/>
+  </section>
+  <section description="储能地调处理模块" key="strgserver">
+   <item description="是否测试状态" key="istest" modify="" value="flase" type=""/>
+   <item description="日志级别" key="loglevel" modify="" value="1" type=""/>
+   <item description="写实时库间隔" key="writespan" modify="" value="1.0" type=""/>
+   <item description="转发数据间隔" key="transspan" modify="" value="5.0" type=""/>
+   <item description="调度控制等待结果时间" key="ctrltimeout" modify="" value="5.0" type=""/>
+   <item description="调度控制最小间隔时间" key="ctrlspan" modify="" value="5.0" type=""/>
+  </section>
+  <section description="数据转发" key="intersite">
+   <item description="累加量定时主动上送周期（毫秒），0表示不定时上送" key="accumucycle" modify="" value="0" type=""/>
+   <item description="模拟量定时主动上送周期（毫秒），0表示不定时上送" key="analogcycle" modify="" value="0" type=""/>
+   <item description="虚点计算量定时主动上送周期（毫秒），0表示不定时上送" key="exprcalcycle" modify="" value="0" type=""/>
+   <item description="状态量定时主动上送周期（毫秒），0表示不定时上送" key="statuscycle" modify="" value="0" type=""/>
+   <item description="数据转发测试状态" key="intersitetest" modify="" value="false" type=""/>
+  </section>
+  <section description="历史数据存储" key="hdbtrans">
+   <item description="是否双历史库" key="dealdoublehisdb" modify="" value="false" type=""/>
+   <item description="历史库1" key="hisdb1" modify="" value="plat_global/database/hisdb/hisdb1" type=""/>
+   <item description="历史库2" key="hisdb2" modify="" value="plat_global/database/hisdb/hisdb2" type=""/>
+  </section>
+  <section description="历史数据存储" key="hdbsave">
+   <item description="存储间隔" key="interval" modify="" value="30" type=""/>
+   <item description="是否删除" key="deleteflag" modify="" value="true" type=""/>
+   <item description="是否双历史库" key="dealdoublehisdb" modify="" value="false" type=""/>
+   <item description="历史库1" key="hisdb1" modify="" value="plat_global/database/hisdb/hisdb1" type=""/>
+   <item description="历史库2" key="hisdb2" modify="" value="plat_global/database/hisdb/hisdb2" type=""/>
+  </section>
+  <section description="scada建模" key="modeler">
+   <item description="数据库驱动" key="driver" modify="" value="QMYSQL3" type=""/>
+   <item description="默认应用系统" key="family" modify="" value="SCADA" type=""/>
+   <item description="IP" key="ip" modify="" value="10.201.130.235" type=""/>
+   <item description="在线维护是否验证用户权限" key="onlinepwdcheck" modify="" value="1" type=""/>
+   <item description="访问密码" key="password" modify="" value="08EF1928E2E3A1E22CAD13B9E190BF00" type=""/>
+   <item description="网络服务名" key="sername" modify="" value="xxx8601" type=""/>
+   <item description="是否同步更新实时库" key="updatertdb" modify="" value="1" type=""/>
+   <item description="用户名" key="username" modify="" value="xxx8601" type=""/>
+   <item description="" key="hostname" modify="false" value="10.201.130.235" type=""/>
+   <item description="" key="port" modify="false" value="5236" type=""/>
+  </section>
+  <section description="trans建模" key="transmodeler">
+   <item description="数据库驱动" key="driver" modify="" value="QMYSQL3" type=""/>
+   <item description="IP" key="ip" modify="" value="127.0.0.1" type=""/>
+   <item description="端口" key="port" modify="" value="5236" type=""/>
+   <item description="访问密码" key="password" modify="" value="B1E3AE5A0919F929" type=""/>
+   <item description="网络服务名" key="sername" modify="" value="trans" type=""/>
+   <item description="用户名" key="username" modify="" value="SYSDBA" type=""/>
+  </section>
+ </section>
+ <section description="系统平台" key="plat_sys">
+  <section description="消息中心" key="mscenter">
+   <item description="是否接受角色" key="acceptrole" modify="" value="false" type=""/>
+   <item description="是否双机" key="doublehost" modify="" value="false" type=""/>
+   <item description="是否双网" key="doublenet" modify="" value="false" type=""/>
+   <item description="服务端口" key="port" modify="" value="12000" type=""/>
+  </section>
+  <section description="资源中心" key="netfile">
+   <item description="是否接受角色" key="acceptrole" modify="" value="false" type=""/>
+   <item description="是否双机" key="doublehost" modify="" value="false" type=""/>
+   <item description="是否双网" key="doublenet" modify="" value="false" type=""/>
+   <item description="服务端口" key="port" modify="" value="12118" type=""/>
+   <item description="双网服务器同步周期" key="syncyc" modify="" value="60000" type=""/>
+   <item description="连接超时时间" key="timeout" modify="" value="1000" type=""/>
+   <section description="同步目录" key="synlist">
+    <item description="报表资源" key="reports" modify="" value="reports" type=""/>
+    <item description="报表资源" key="xview" modify="" value="xview" type=""/>
+   </section>
+  </section>
+  <section description="在线更新" key="onlineupdate">
+   <item description="是否双网" key="doublenet" modify="" value="0" type=""/>
+   <item description="是否双机" key="doubleserver" modify="" value="0" type=""/>
+   <item description="主机1名称" key="host1" modify="" value="plat_global/server1" type=""/>
+   <item description="" key="host1_listen_port" modify="" value="10101" type=""/>
+   <item description="" key="host1_mcast_ip" modify="" value="224.7.9.231" type=""/>
+   <item description="" key="host1_mcast_port" modify="" value="12436" type=""/>
+   <item description="主机2名称" key="host2" modify="" value="plat_global/server2" type=""/>
+   <item description="" key="host2_listen_port" modify="" value="10101" type=""/>
+   <item description="" key="host2_mcast_ip" modify="" value="224.9.9.3" type=""/>
+   <item description="" key="host2_mcast_port" modify="" value="12512" type=""/>
+   <item description="" key="linklosttimersecs" modify="" value="10" type=""/>
+   <item description="" key="logfile" modify="" value="" type=""/>
+   <item description="" key="maxlinklosttimes" modify="" value="6" type=""/>
+   <item description="配置库" key="modeldb" modify="" value="plat_global/database/modeldb" type=""/>
+   <item description="" key="onlineupdatetimeout" modify="" value="120" type=""/>
+   <item description="" key="pausetimeout" modify="" value="20" type=""/>
+   <item description="" key="refreshtimeout" modify="" value="20" type=""/>
+   <item description="实时库1配置路径" key="rtdb1" modify="" value="plat_global/database/rtdb/schema" type=""/>
+   <item description="实时库个数" key="rtdbcount" modify="" value="1" type=""/>
+   <item description="" key="rtdbprocess" modify="" value="scadasrv" type=""/>
+   <item description="" key="updatetimeout" modify="" value="40" type=""/>
+  </section>
+  <section description="进程管理工具" key="procmanager">
+   <item description="是否双网" key="doublenet" modify="" value="0" type=""/>
+   <item description="logfile" key="logfile" modify="" value="/home/ics8000/log/pmanager.log" type=""/>
+   <item description="port11" key="port11" modify="" value="8030" type=""/>
+   <item description="port12" key="port12" modify="" value="8030" type=""/>
+   <item description="port21" key="port21" modify="" value="8030" type=""/>
+   <item description="port22" key="port22" modify="" value="8030" type=""/>
+   <item description="管理的进程个数" key="procnumber" modify="" value="13" type=""/>
+   <item description="quitwhencreateerror" key="quitwhencreateerror" modify="" value="1" type=""/>
+   <section description="进程1" key="proc1">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="mscenter" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="1000" type=""/>
+   </section>
+   <section description="进程2" key="proc2">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="rtdbproxy" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程3" key="proc3">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="onlineupdateserver" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程4" key="proc4">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="userauth" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="1000" type=""/>
+   </section>
+   <section description="进程5" key="proc5">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="alarmcenter" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="1000" type=""/>
+   </section>
+   <section description="进程6" key="proc6">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="scadasrv" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程7" key="proc7">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="hdbtrans" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="1000" type=""/>
+   </section>
+   <section description="进程8" key="proc8">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="alarmsave" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程9" key="proc9">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="hdbstrategy" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程10" key="proc10">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="csfboot" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="1" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程11" key="proc11">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="-u admin -p ics8k" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="xbrowser" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="0" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程12" key="proc12">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="strgserver" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="0" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+   <section description="进程13" key="proc13">
+    <item description="应用名成" key="application" modify="" value="scada" type=""/>
+    <item description="运行参数" key="commandline" modify="" value="" type=""/>
+    <item description="启动延迟(毫秒)" key="delay" modify="" value="5000" type=""/>
+    <item description="应用组名称" key="family" modify="" value="SCADA" type=""/>
+    <item description="进程名" key="name" modify="" value="esfileserver" type=""/>
+    <item description="重启次数" key="reboot" modify="" value="0" type=""/>
+    <item description="重启延迟(毫秒)" key="rebootdelay" modify="" value="5000" type=""/>
+   </section>
+  </section>
+  <section description="实时库访问代理" key="rtdbproxy">
+   <item description="是否支持在线更新" key="onlineupdate" modify="" value="true" type=""/>
+   <item description="服务端口" key="port" modify="" value="8040" type=""/>
+   <item description="是否访问远程实时库" key="rtdbremote" modify="" value="false" type=""/>
+  </section>
+  <section description="系统监视" key="sysmoni">
+   <item description="database1" key="database1" modify="" value="plat_global/database/hisdb/hisdb1" type=""/>
+   <item description="database2" key="database2" modify="" value="plat_global/database/hisdb/hisdb2" type=""/>
+   <item description="dbcount" key="dbcount" modify="" value="2" type=""/>
+   <item description="是否双机" key="doubleserver" modify="" value="0" type=""/>
+   <item description="历史库" key="hisdb" modify="" value="plat_global/database/hisdb/hisdb1" type=""/>
+   <item description="主机1路径" key="host1" modify="" value="plat_global/server1" type=""/>
+   <item description="主机1侦听端口" key="host1_listen_port" modify="" value="10023" type=""/>
+   <item description="主机2路径" key="host2" modify="" value="plat_global/server2" type=""/>
+   <item description="主机2侦听端口" key="host2_listen_port" modify="" value="10023" type=""/>
+   <item description="maxlinklosttimes" key="maxlinklosttimes" modify="" value="60" type=""/>
+   <item description="refreshdbsecs" key="refreshdbsecs" modify="" value="60" type=""/>
+   <item description="refreshsecs" key="refreshsecs" modify="" value="5" type=""/>
+   <item description="存储间隔" key="saveinterval" modify="" value="1" type=""/>
+  </section>
+  <section description="权限管理" key="userauth">
+   <item description="是否接受角色" key="acceptrole" modify="" value="false" type=""/>
+   <item description="是否双机" key="doublehost" modify="" value="false" type=""/>
+   <item description="是否双网" key="doublenet" modify="" value="false" type=""/>
+   <item description="是否本地验证" key="localcache" modify="" value="false" type=""/>
+   <item description="服务端口" key="port" modify="" value="12119" type=""/>
+   <item description="请求超时" key="timeout" modify="" value="1000" type=""/>
+  </section>
+ </section>
+ <section description="表示平台" key="plat_xview">
+  <section description="报表" key="icsreport">
+   <item description="amount日报的值字段" key="amountvaluecolumnname" modify="" value="" type=""/>
+   <item description="重复加载次数" key="reloadtimes" modify="" value="1" type=""/>
+  </section>
+ </section>
+</section>
