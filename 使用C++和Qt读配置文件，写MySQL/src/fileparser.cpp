@@ -12,13 +12,13 @@
 #include "./common/sysconfig.h"  
 #include "./common/defs.h"
 
-extern bool IsMainRole();                     // ÊÇ·ñÎªÖ÷½ÇÉ«
+extern bool IsMainRole();                     // æ˜¯å¦ä¸ºä¸»è§’è‰²
 
 FileParser* FileParser::m_pInst = 0;
 
 FileParser::FileParser(): m_bExit(false)
 {
-	m_pUpdateRealACfg = (new CUpdateDt())->Self(); //µÃµ½½Ó¿Ú¶ÔÏóµÄÍ¬Ê±£¬ÒÑ¾­°Ñ¶¯Ì¬¿â¼ÓÔØ½øÀ´ÁË£»
+	m_pUpdateRealACfg = (new CUpdateDt())->Self(); //å¾—åˆ°æ¥å£å¯¹è±¡çš„åŒæ—¶ï¼Œå·²ç»æŠŠåŠ¨æ€åº“åŠ è½½è¿›æ¥äº†ï¼›
 	m_nFileDeleteCycle = 1;
 	m_nFileKeepTime = 10;
 }
@@ -46,54 +46,54 @@ FileParser* FileParser::Instance()
 
 void FileParser::run()
 {
-	//Ïß³ÌÆô¶¯³õÊ¼ ¾²Ö¹50ms
+	//çº¿ç¨‹å¯åŠ¨åˆå§‹ é™æ­¢50ms
 	msleep(1000);
 
-	//1¡¢Á¬½ÓÀúÊ·¿â
+	//1ã€è¿æ¥å†å²åº“
 	SysConfig dbsys;
 	if(dbsys.ConnectDatabas())	
 	{
-		printf("clw£ºesfileserver·şÎñÀúÊ·¿âÁ¬½Ó³É¹¦£¡\n");
-		WriteDailyLog(true, "clw£ºÀúÊ·¿âÁ¬½Ó³É¹¦£¡\n");
+		printf("clwï¼šesfileserveræœåŠ¡å†å²åº“è¿æ¥æˆåŠŸï¼\n");
+		WriteDailyLog(true, "clwï¼šå†å²åº“è¿æ¥æˆåŠŸï¼\n");
 	}
 	else 
 	{
-		printf("clw£ºesfileserver·şÎñÀúÊ·¿âÁ¬½ÓÊ§°Ü£¡\n");
-		WriteDailyLog(true, "clw£ºÀúÊ·¿âÁ¬½ÓÊ§°Ü£¡\n");
+		printf("clwï¼šesfileserveræœåŠ¡å†å²åº“è¿æ¥å¤±è´¥ï¼\n");
+		WriteDailyLog(true, "clwï¼šå†å²åº“è¿æ¥å¤±è´¥ï¼\n");
 	}
 
-	//2¡¢Á¬½ÓÅäÖÃ¿â
+	//2ã€è¿æ¥é…ç½®åº“
 	if(dbsys.ConnectModelDB())	
 	{
-		printf("clw£ºesfileserver·şÎñÅäÖÃ¿âÁ¬½Ó³É¹¦£¡\n");
-		WriteDailyLog(true, "clw£ºÅäÖÃ¿âÁ¬½Ó³É¹¦£¡\n");
+		printf("clwï¼šesfileserveræœåŠ¡é…ç½®åº“è¿æ¥æˆåŠŸï¼\n");
+		WriteDailyLog(true, "clwï¼šé…ç½®åº“è¿æ¥æˆåŠŸï¼\n");
 	}
 	else 
 	{
-		printf("clw£ºesfileserver·şÎñÅäÖÃ¿âÁ¬½ÓÊ§°Ü£¡\n");
-		WriteDailyLog(true, "clw£ºÅäÖÃ¿âÁ¬½ÓÊ§°Ü£¡\n");
+		printf("clwï¼šesfileserveræœåŠ¡é…ç½®åº“è¿æ¥å¤±è´¥ï¼\n");
+		WriteDailyLog(true, "clwï¼šé…ç½®åº“è¿æ¥å¤±è´¥ï¼\n");
 	}
 
-	//3¡¢´Óesfilesetting.iniÎÄ¼şÖĞ¶ÁÈëÅäÖÃĞÅÏ¢
+	//3ã€ä»esfilesetting.iniæ–‡ä»¶ä¸­è¯»å…¥é…ç½®ä¿¡æ¯
 	if(!ReadInConfigPara())
 	{
-		printf("clw£ºesfileserver·şÎñ¶ÁÈ¡ÅäÖÃĞÅÏ¢Ê§°Ü£¡\n");
-		WriteDailyLog(true, "clw£ºesfileserver·şÎñ¶ÁÈ¡ÅäÖÃĞÅÏ¢Ê§°Ü£¡\n");
+		printf("clwï¼šesfileserveræœåŠ¡è¯»å–é…ç½®ä¿¡æ¯å¤±è´¥ï¼\n");
+		WriteDailyLog(true, "clwï¼šesfileserveræœåŠ¡è¯»å–é…ç½®ä¿¡æ¯å¤±è´¥ï¼\n");
 		return;
 	}
 
 	int count = 0;
 	while(!m_bExit)
 	{
-		//3¡¢½âÎöÎÄ¼şÄÚÈİ
-		//Ğ´¶ÌÆÚ¸ººÉÔ¤²â±í»ò³¬¶ÌÆÚ¸ººÉÔ¤²â±í
-		//³¬¶ÌÆÚ¸ººÉÔ¤²â£¬Î´À´4Ğ¡Ê±  
-		//¶ÌÆÚ¸ººÉÔ¤²âÈÕÇ°ÒÑ¾­Ğ´ºÃ
+		//3ã€è§£ææ–‡ä»¶å†…å®¹
+		//å†™çŸ­æœŸè´Ÿè·é¢„æµ‹è¡¨æˆ–è¶…çŸ­æœŸè´Ÿè·é¢„æµ‹è¡¨
+		//è¶…çŸ­æœŸè´Ÿè·é¢„æµ‹ï¼Œæœªæ¥4å°æ—¶  
+		//çŸ­æœŸè´Ÿè·é¢„æµ‹æ—¥å‰å·²ç»å†™å¥½
 
-		//×¢Òâ£º£¨1£©½âÎöÖ®ºó²»ÄÜÁ¢¼´É¾³ı£¬ĞèÒª±¸·İÒ»¶ÎÊ±¼ä£¬Òò´ËĞèÒª±êÊ¶Ä³¸öÎÄ¼şÒÑ¾­±»½âÎö¹ıÁË£¬±ÈÈçĞŞ¸ÄÇ°×º£¬»òÕßcopyµ½ÁíÒ»¸öµØ·½
-		//       £¨2£©Ó¦ÌáÈ¡Ä³Ò»Ç°×º£¨ÈçBJ_£©µÄÎÄ¼ş½øĞĞ½âÎö
-		//       £¨3£©¿¼ÂÇ1¸öÏß³Ìor2¸öÏß³Ì
-		//       £¨4£©Éè¶¨1¸öÊ±¼ä¼ä¸ô£¬±ÈÈçÒ»·ÖÖÓÕÒÒ»ÏÂÎÄ¼ş£¬È»ºó½âÎöÒ»ÏÂ
+		//æ³¨æ„ï¼šï¼ˆ1ï¼‰è§£æä¹‹åä¸èƒ½ç«‹å³åˆ é™¤ï¼Œéœ€è¦å¤‡ä»½ä¸€æ®µæ—¶é—´ï¼Œå› æ­¤éœ€è¦æ ‡è¯†æŸä¸ªæ–‡ä»¶å·²ç»è¢«è§£æè¿‡äº†ï¼Œæ¯”å¦‚ä¿®æ”¹å‰ç¼€ï¼Œæˆ–è€…copyåˆ°å¦ä¸€ä¸ªåœ°æ–¹
+		//       ï¼ˆ2ï¼‰åº”æå–æŸä¸€å‰ç¼€ï¼ˆå¦‚BJ_ï¼‰çš„æ–‡ä»¶è¿›è¡Œè§£æ
+		//       ï¼ˆ3ï¼‰è€ƒè™‘1ä¸ªçº¿ç¨‹or2ä¸ªçº¿ç¨‹
+		//       ï¼ˆ4ï¼‰è®¾å®š1ä¸ªæ—¶é—´é—´éš”ï¼Œæ¯”å¦‚ä¸€åˆ†é’Ÿæ‰¾ä¸€ä¸‹æ–‡ä»¶ï¼Œç„¶åè§£æä¸€ä¸‹
 
 		if(m_vecFiles.empty())
 		{
@@ -102,130 +102,112 @@ void FileParser::run()
 		int len = m_vecFiles.size();
 		for(int i=0; i<len; ++i)
 		{
-			//Ö÷±¸×´Ì¬ÅĞ¶Ï£¬Ö÷×´Ì¬²Å½âÎö£¬±¸×´Ì¬ÒÆ¶¯µ½ÆäËûµØ·½
+			//ä¸»å¤‡çŠ¶æ€åˆ¤æ–­ï¼Œä¸»çŠ¶æ€æ‰è§£æï¼Œå¤‡çŠ¶æ€ç§»åŠ¨åˆ°å…¶ä»–åœ°æ–¹
 #ifndef WINDOWS_DEBUG
 			if(IsMainRole())
 			{
 				if(g_IsDebug)
 				{
-					printf("clw£ºÖ÷±¸×´Ì¬£ºÖ÷»ú\n");
+					printf("clwï¼šä¸»å¤‡çŠ¶æ€ï¼šä¸»æœº\n");
 				}
 #endif
 				if(ParseESFile(m_vecFiles[i].c_str()))
 				{
-					//Èç¹ûÄÜ¹»ÕıÈ·½âÎöÎÄ¼ş£¬ÔÙ¿ªÊ¼Ğ´Êı¾İ¿â±í
+					//å¦‚æœèƒ½å¤Ÿæ­£ç¡®è§£ææ–‡ä»¶ï¼Œå†å¼€å§‹å†™æ•°æ®åº“è¡¨
 					if(WriteFileInfoToDB())
 					{
 						if(g_IsDebug)
 						{
-							printf("clw£ºĞ´ÀúÊ·Êı¾İ¿â³É¹¦£¡×¼±¸ÒÆ¶¯ÎÄ¼ş\n");
-							WriteDailyLog(true, "clw£ºĞ´ÀúÊ·Êı¾İ¿â³É¹¦£¡×¼±¸ÒÆ¶¯ÎÄ¼ş\n");
+							printf("clwï¼šå†™å†å²æ•°æ®åº“æˆåŠŸï¼å‡†å¤‡ç§»åŠ¨æ–‡ä»¶\n");
+							WriteDailyLog(true, "clwï¼šå†™å†å²æ•°æ®åº“æˆåŠŸï¼å‡†å¤‡ç§»åŠ¨æ–‡ä»¶\n");
 						}
-						//Èç¹ûĞ´Êı¾İ¿â³É¹¦£¬ÔÙ½«ÎÄ¼şÒÆ¶¯µ½Ä³Ò»ÎÄ¼ş¼ĞÏÂ£¬Ïàµ±ÓÚ±êÊ¶¸ÃÎÄ¼ş¡°ÒÑ±»´¦Àí¡±£¬È·±£²»»áÍ¬Ò»ÎÄ¼ş·´¸´½âÎö
+						//å¦‚æœå†™æ•°æ®åº“æˆåŠŸï¼Œå†å°†æ–‡ä»¶ç§»åŠ¨åˆ°æŸä¸€æ–‡ä»¶å¤¹ä¸‹ï¼Œç›¸å½“äºæ ‡è¯†è¯¥æ–‡ä»¶â€œå·²è¢«å¤„ç†â€ï¼Œç¡®ä¿ä¸ä¼šåŒä¸€æ–‡ä»¶åå¤è§£æ
 						MoveFileToDst(m_vecFiles[i], FILE_PATH + string("/") + FILE_PROCESSED_FOLDER);
 						
 					}
 					else
 					{
-						printf("clw£ºĞ´ÀúÊ·Êı¾İ¿âÊ§°Ü£¡\n", m_vecFiles[i].c_str());
+						printf("clwï¼šå†™å†å²æ•°æ®åº“å¤±è´¥ï¼\n", m_vecFiles[i].c_str());
 						printf("\n");
-						WriteDailyLog(true, "clw£ºĞ´ÀúÊ·Êı¾İ¿âÊ§°Ü£¡");
+						WriteDailyLog(true, "clwï¼šå†™å†å²æ•°æ®åº“å¤±è´¥ï¼");
 					}
 				}
 				else
 				{
-					printf("ParseESFile()½âÎöÎÄ¼ş%sÊ§°Ü£¬¼ÌĞø½âÎöÆäËûÎÄ¼ş\n", m_vecFiles[i].c_str());
+					printf("ParseESFile()è§£ææ–‡ä»¶%så¤±è´¥ï¼Œç»§ç»­è§£æå…¶ä»–æ–‡ä»¶\n", m_vecFiles[i].c_str());
 					printf("\n");
-					string strLogInfo = "clw£ºParseESFile()½âÎöÎÄ¼ş" +  m_vecFiles[i] + "Ê§°Ü£¬¼ÌĞø½âÎöÆäËûÎÄ¼ş£¡";
+					string strLogInfo = "clwï¼šParseESFile()è§£ææ–‡ä»¶" +  m_vecFiles[i] + "å¤±è´¥ï¼Œç»§ç»­è§£æå…¶ä»–æ–‡ä»¶ï¼";
 					WriteDailyLog(true, strLogInfo.c_str());
 				}
 #ifndef WINDOWS_DEBUG
 			}
-			else //Ö÷±¸×´Ì¬£º±¸»ú
+			else //ä¸»å¤‡çŠ¶æ€ï¼šå¤‡æœº
 			{
 				if(g_IsDebug)
 				{
-					WriteDailyLog(true, "clw£ºÖ÷±¸×´Ì¬£º±¸»ú\n");
-					printf("clw£ºÖ÷±¸×´Ì¬£º±¸»ú\n");
+					WriteDailyLog(true, "clwï¼šä¸»å¤‡çŠ¶æ€ï¼šå¤‡æœº\n");
+					printf("clwï¼šä¸»å¤‡çŠ¶æ€ï¼šå¤‡æœº\n");
 				}
-				//ÎŞĞè½âÎöºÍ´¦ÀíÎÄ¼ş£¬Ö±½ÓÒÆ¶¯µ½¡°ÒÑ´¦Àí¡±ÎÄ¼ş¼ĞÏÂ£¬Ïàµ±ÓÚ±êÊ¶¸ÃÎÄ¼ş¡°ÒÑ±»´¦Àí¡±£¬È·±£²»»áÍ¬Ò»ÎÄ¼ş·´¸´½âÎö
+				//æ— éœ€è§£æå’Œå¤„ç†æ–‡ä»¶ï¼Œç›´æ¥ç§»åŠ¨åˆ°â€œå·²å¤„ç†â€æ–‡ä»¶å¤¹ä¸‹ï¼Œç›¸å½“äºæ ‡è¯†è¯¥æ–‡ä»¶â€œå·²è¢«å¤„ç†â€ï¼Œç¡®ä¿ä¸ä¼šåŒä¸€æ–‡ä»¶åå¤è§£æ
 				MoveFileToDst(m_vecFiles[i], FILE_PATH + string("/") + FILE_PROCESSED_FOLDER);
 			}
 #endif
-			//Ã¿´Î²»¹ÜÄÜ·ñÕıÈ·½âÎöÎÄ¼ş£¬Ö®ºóÒªÇåµô96µã¹¦ÂÊÖµvector<>ºÍn¸ö96µã¹¦ÂÊÖµµÄvector<vector<>>£¬»¹ÒªÎÄ¼şË÷Òıvec
+			//æ¯æ¬¡ä¸ç®¡èƒ½å¦æ­£ç¡®è§£ææ–‡ä»¶ï¼Œä¹‹åè¦æ¸…æ‰96ç‚¹åŠŸç‡å€¼vector<>å’Œnä¸ª96ç‚¹åŠŸç‡å€¼çš„vector<vector<>>ï¼Œè¿˜è¦æ–‡ä»¶ç´¢å¼•vec
 			vector<float>().swap(m_vecShortP);
 			vector<vector<float> >().swap(m_vecStationShortPs);
 			vector<int>().swap(m_vecFilesInfoIndex);
 		} 
 
-		//×îºóÇåµô°üº¬ËùÓĞÎÄ¼şµÄvector<>£¬ÒòÎªÕâĞ©ÎÄ¼şÒÑ¾­±»´¦Àí¹ı£»	
-		vector<string>().swap(m_vecFiles);  //»òÕßm_vecFiles.swap(vector<string>());	
+		//æœ€åæ¸…æ‰åŒ…å«æ‰€æœ‰æ–‡ä»¶çš„vector<>ï¼Œå› ä¸ºè¿™äº›æ–‡ä»¶å·²ç»è¢«å¤„ç†è¿‡ï¼›	
+		vector<string>().swap(m_vecFiles);  //æˆ–è€…m_vecFiles.swap(vector<string>());	
 
-		//¶¨ÆÚÇåÀíÎÄ¼ş
+		//å®šæœŸæ¸…ç†æ–‡ä»¶
 		count++;
-		if(count >= m_nFileDeleteCycle * 120)  //ÒòÎªÏß³Ì30sÑ­»·Ò»´Î£¬Òò´ËÈç¹ûÊÇ1Ğ¡Ê±¿´Ò»ÏÂÊÇ·ñ´æÔÚ¾ÉÎÄ¼ş£¬ÄÇÃ´¾ÍÓ¦¸ÃÊÇcount == 120£¬¶ÔÓ¦60min
+		if(count >= m_nFileDeleteCycle * 120)  //å› ä¸ºçº¿ç¨‹30så¾ªç¯ä¸€æ¬¡ï¼Œå› æ­¤å¦‚æœæ˜¯1å°æ—¶çœ‹ä¸€ä¸‹æ˜¯å¦å­˜åœ¨æ—§æ–‡ä»¶ï¼Œé‚£ä¹ˆå°±åº”è¯¥æ˜¯count == 120ï¼Œå¯¹åº”60min
 		{
 			DeleteFileByTime();
 			count = 0;
 		}
 
-		//µÈ´ı30s£¬Èç¹ûÓĞĞÂµÄÎÄ¼ş£¬ÔÙ¶Á½øÀ´£¬½âÎö£»
+		//ç­‰å¾…30sï¼Œå¦‚æœæœ‰æ–°çš„æ–‡ä»¶ï¼Œå†è¯»è¿›æ¥ï¼Œè§£æï¼›
 		msleep(THREAD_PERIOD_MS);
 	}
 }
-
-/* clw note£º
-ÔÚÈİÆ÷vectorÖĞ£¬ÆäÄÚ´æÕ¼ÓÃµÄ¿Õ¼äÊÇÖ»Ôö²»¼õµÄ£¬±ÈÈçËµÊ×ÏÈ·ÖÅäÁË10,000¸ö×Ö½Ú£¬
-È»ºóeraseµôºóÃæ9,999¸ö£¬ÔòËäÈ»ÓĞĞ§ÔªËØÖ»ÓĞÒ»¸ö£¬µ«ÊÇÄÚ´æÕ¼ÓÃÈÔÎª10,000¸ö¡£
-ËùÓĞÄÚ´æ¿Õ¼äÔÚvectorÎö¹¹Ê±»ØÊÕ¡£
-Ò»°ã£¬ÎÒÃÇ¶¼»áÍ¨¹ıvectorÖĞ³ÉÔ±º¯Êıclear½øĞĞÒ»Ğ©Çå³ı²Ù×÷£¬µ«ËüÇå³ıµÄÊÇËùÓĞµÄÔªËØ£¬
-Ê¹vectorµÄ´óĞ¡¼õÉÙÖÁ0£¬È´²»ÄÜ¼õĞ¡vectorÕ¼ÓÃµÄÄÚ´æ¡£Òª±ÜÃâvector³ÖÓĞËü²»ÔÙĞèÒªµÄÄÚ´æ£¬
-Õâ¾ÍĞèÒªÒ»ÖÖ·½·¨À´Ê¹µÃËü´ÓÔø¾­µÄÈİÁ¿¼õÉÙÖÁËüÏÖÔÚĞèÒªµÄÈİÁ¿£¬ÕâÑù¼õÉÙÈİÁ¿µÄ·½·¨±»³ÆÎª
-¡°ÊÕËõµ½ºÏÊÊ£¨shrink to fit£©¡±¡££¨½ÚÑ¡×Ô¡¶Effective STL¡·£©Èç¹û×öµ½¡°ÊÕËõµ½ºÏÊÊ¡±ÄØ£¬ºÙºÙ£¬
-Õâ¾ÍÒªÈ«ÑöÕÌ¡°Swap´óÏÀ¡±À²£¬¼´Í¨¹ıÈçÏÂ´úÂë½øĞĞÊÍ·Å¹ıÊ£µÄÈİÁ¿£º
-
-ÔÚÊ¹ÓÃC++ÖĞµÄ vectorµÄÊ±ºò£¬vectorµÄÉêÇëµÄÄÚ´æ²»»á×Ô¶¯ÊÍ·Å£¬µ± push_backµÄÊ±ºò£¬
-Èç¹û vectorµÄµ±Ç°ÄÚ´æ²»¹»Ê¹ÓÃµÄÊ±ºò£¬vector»á×Ô¶¯µÄ¶ş±¶Ôö³¤ÄÚ´æ£¬¿ÉÄÜ»áµ¼ÖÂ×îºóÄÚ´æ
-²»¶ÏµÄÔö¶à¡£ÏÂÃæÎÒÃÇ½éÉÜ¼¸ÖÖ±ÜÃâÕâÖÖÇé¿öµÄ¼¼ÇÉ¡£
-Õâ¸öÎÊÌâ¿ÉÒÔÍ¨¹ı swapÀ´½µµÍ vector¶ÔÄÚ´æµÄÏûºÄ¡£
-swap¿ÉÒÔÓĞĞ§½µµÍµ±Ç° vectorÕ¼ÓÃµÄÄÚ´æ×ÜÁ¿¡£
-*/
-
 
 bool FileParser::GetFiles(const string& path, vector<string>& vecFiles)  
 {  	
 	int pathLen = path.length();
 	if(pathLen >= 256)
 	{
-		printf("clw£ºÎÄ¼şÃû%s¹ı³¤£¡\n", path.c_str());
-		string strLogInfo = "clw£ºÎÄ¼şÃû" + path + "¹ı³¤£¡\n";
+		printf("clwï¼šæ–‡ä»¶å%sè¿‡é•¿ï¼\n", path.c_str());
+		string strLogInfo = "clwï¼šæ–‡ä»¶å" + path + "è¿‡é•¿ï¼\n";
 		WriteDailyLog(true, strLogInfo.c_str());
 		return false;
 	}
 
 	bool bSuc = false;
 	QString tempdirPath;
-	char charp[256] = {0}; //clw note£ºÊı×éµÄÁĞ±í³õÊ¼»¯£¬ºÍchar charp[256] = "";µÈ¼Û
+	char charp[256] = {0}; //clw noteï¼šæ•°ç»„çš„åˆ—è¡¨åˆå§‹åŒ–ï¼Œå’Œchar charp[256] = "";ç­‰ä»·
 
 	int i;
 	for(i = 0; i < pathLen; ++i)
 	{
-		//if ( path[i] == 0x0d )	//clw note£ºASCIIÖµ=13¶ÔÓ¦ÊÇ»Ø³µ£¬µ«ÊÇÎÄ¼şÃûÖĞºÃÏñÃ»ÓĞ»Ø³µ£¿¸Ğ¾õÕâÁ½¾ä¿ÉÒÔÈ¥µô
+		//if ( path[i] == 0x0d )	//clw noteï¼šASCIIå€¼=13å¯¹åº”æ˜¯å›è½¦ï¼Œä½†æ˜¯æ–‡ä»¶åä¸­å¥½åƒæ²¡æœ‰å›è½¦ï¼Ÿæ„Ÿè§‰è¿™ä¸¤å¥å¯ä»¥å»æ‰
 		//	break;	
 		charp[i] = path[i];
 	}
 	charp[i] = '\0';
 	tempdirPath.sprintf("%s", charp);
 	QDir dir;
-	if (!dir.exists(tempdirPath)) //°ÑÒÑ´¦Àí¹ıµÄTXTÍ³Ò»·Åµ½dstDirÄÚ
+	if (!dir.exists(tempdirPath)) //æŠŠå·²å¤„ç†è¿‡çš„TXTç»Ÿä¸€æ”¾åˆ°dstDirå†…
 	{
-		if(!dir.mkpath(tempdirPath)) //Èç¹ûÎÄ¼ş¼Ğ²»´æÔÚ£¬ÔòĞÂ½¨ÎÄ¼ş¼Ğ
+		if(!dir.mkpath(tempdirPath)) //å¦‚æœæ–‡ä»¶å¤¹ä¸å­˜åœ¨ï¼Œåˆ™æ–°å»ºæ–‡ä»¶å¤¹
 		{
 			//QStringList qStrList = QString::fromStdString(filepath).split("/");
 			//if(!dir.mkdir(qStrList[qStrList.length() - 1].toStdString()))
 			//{
-				printf("clw£º´´½¨Â·¾¶%sÊ§°Ü£¬Çë¼ì²é£¡\n", tempdirPath.toLatin1().data());
-				WriteDailyLog(true, "clw£º´´½¨Â·¾¶Ê§°Ü£¬Çë¼ì²é£¡\n");
+				printf("clwï¼šåˆ›å»ºè·¯å¾„%så¤±è´¥ï¼Œè¯·æ£€æŸ¥ï¼\n", tempdirPath.toLatin1().data());
+				WriteDailyLog(true, "clwï¼šåˆ›å»ºè·¯å¾„å¤±è´¥ï¼Œè¯·æ£€æŸ¥ï¼\n");
 				return false;
 			//}
 		}
@@ -233,18 +215,18 @@ bool FileParser::GetFiles(const string& path, vector<string>& vecFiles)
 
 	/*if(!dir.exists(tempdirPath))
 	{	
-		printf("clw£ºÂ·¾¶%s²»´æÔÚ£¡\n", path.c_str());
-		string strLogInfo = "clw£ºÂ·¾¶" +  path + "²»´æÔÚ£¡\n";
+		printf("clwï¼šè·¯å¾„%sä¸å­˜åœ¨ï¼\n", path.c_str());
+		string strLogInfo = "clwï¼šè·¯å¾„" +  path + "ä¸å­˜åœ¨ï¼\n";
 		WriteDailyLog(true, strLogInfo.c_str());
 		return false;
 	}*/
 
 	QStringList filtersWai;
-	//¶¨Òåµü´úÆ÷²¢ÉèÖÃ¹ıÂËÆ÷
+	//å®šä¹‰è¿­ä»£å™¨å¹¶è®¾ç½®è¿‡æ»¤å™¨
 	QDirIterator dir_iteratorWai(tempdirPath,
 		filtersWai,
 		QDir::Files | QDir::NoSymLinks 
-		|QDir::NoDotAndDotDot /*½«"."ºÍ".."Ä¿Â¼ºöÂÔ, ·ñÔò¾Í»áµ±³É×ÓÄ¿Â¼´¦Àí£¬Ôì³ÉÁËËÀÑ­»·. */
+		|QDir::NoDotAndDotDot /*å°†"."å’Œ".."ç›®å½•å¿½ç•¥, å¦åˆ™å°±ä¼šå½“æˆå­ç›®å½•å¤„ç†ï¼Œé€ æˆäº†æ­»å¾ªç¯. */
 		/*,QDirIterator::Subdirectories*/);
 
 	while(dir_iteratorWai.hasNext())
@@ -255,7 +237,7 @@ bool FileParser::GetFiles(const string& path, vector<string>& vecFiles)
 		vecFiles.push_back(absolute_file_path.toStdString());
 		bSuc = true;
 	}
-	sort(vecFiles.begin(), vecFiles.end());//ÅÅĞò
+	sort(vecFiles.begin(), vecFiles.end());//æ’åº
 	return bSuc;
 } 
 
@@ -266,15 +248,15 @@ bool FileParser::ReadInConfigPara()
 	QFile f(PARA_INI_PATH);
 	if(!f.open(QIODevice::ReadOnly))
 	{
-		printf("clw£ºÎ´ÕÒµ½esfilesetting.iniÅäÖÃÎÄ¼ş£¡\n");
-		WriteDailyLog(true, "clw£ºÎ´ÕÒµ½esfilesetting.iniÅäÖÃÎÄ¼ş£¡\n");
+		printf("clwï¼šæœªæ‰¾åˆ°esfilesetting.inié…ç½®æ–‡ä»¶ï¼\n");
+		WriteDailyLog(true, "clwï¼šæœªæ‰¾åˆ°esfilesetting.inié…ç½®æ–‡ä»¶ï¼\n");
 		return bSuc;
 	}
 
 	QTextStream t(&f);
 	QString str;
 #ifdef Q_OS_WIN
-	QTextCodec *codec=QTextCodec::codecForName("GBK"); //TODO£ºÊÇ·ñÒª¸ÄÎªwinÓÃGBK£¬linuxÓÃUTF8
+	QTextCodec *codec=QTextCodec::codecForName("GBK"); //TODOï¼šæ˜¯å¦è¦æ”¹ä¸ºwinç”¨GBKï¼Œlinuxç”¨UTF8
 #endif
 
 #ifdef Q_OS_LINUX
@@ -291,41 +273,41 @@ bool FileParser::ReadInConfigPara()
 
 	while(!t.atEnd())
 	{
-		//ÒÀ´ÎµÃµ½iniÎÄ¼şµÄÃ¿Ò»ĞĞ
+		//ä¾æ¬¡å¾—åˆ°iniæ–‡ä»¶çš„æ¯ä¸€è¡Œ
 		str = codec->fromUnicode(t.readLine().stripWhiteSpace());
-		//printf("clw£ºiniÎÄ¼şÖĞ½âÎöµÄĞĞµÄÄÚÈİÎª%s\n", str.toLatin1().data());		
+		//printf("clwï¼šiniæ–‡ä»¶ä¸­è§£æçš„è¡Œçš„å†…å®¹ä¸º%s\n", str.toLatin1().data());		
 
-		//Èç¹ûÊÇ¿ÕĞĞ
+		//å¦‚æœæ˜¯ç©ºè¡Œ
 		if(str.isEmpty())
 		{
-			//Èç¹ûstrFileInfoÓĞÄÚÈİ
+			//å¦‚æœstrFileInfoæœ‰å†…å®¹
 			if(!iniFileInfo.m_map_nameInfo.empty() && !iniFileInfo.m_map_nameVals.empty())
 			{
-				//Ôò½«stFileInfo¶ÔÏó´æÈëm_vecFilesInfo£»
+				//åˆ™å°†stFileInfoå¯¹è±¡å­˜å…¥m_vecFilesInfoï¼›
 				m_vecFilesInfo.push_back(iniFileInfo);
-				//Çå¿ÕstrFileInfoÄÚµÄmap
+				//æ¸…ç©ºstrFileInfoå†…çš„map
 				iniFileInfo.m_map_nameInfo.clear();
 				iniFileInfo.m_map_nameVals.clear();
 			}	
-			continue; //¼ÌĞøËÑË÷ÏÂÒ»ĞĞ
+			continue; //ç»§ç»­æœç´¢ä¸‹ä¸€è¡Œ
 		}
 
 		//====================================================================================
-		//Èç¹ûÓĞµÈºÅ£¬ËµÃ÷ÓĞÅäÖÃÏî£¬×¼±¸¶ÁÈ¡
+		//å¦‚æœæœ‰ç­‰å·ï¼Œè¯´æ˜æœ‰é…ç½®é¡¹ï¼Œå‡†å¤‡è¯»å–
 		//====================================================================================
 		string::size_type nEqualSignPos = str.find('='); 
 		if(nEqualSignPos != string::npos) 
 		{
-			left = str.left(nEqualSignPos).stripWhiteSpace();  //±ÈÈçÄÚÈİÎªfiletype£¬»òÕßstation1Ö®Àà
-			right = str.mid(nEqualSignPos + 1).stripWhiteSpace(); //posÎ»ÖÃÔÚµÈºÅ£¬È¡µÈºÅÓÒ±ßµÄÊı
+			left = str.left(nEqualSignPos).stripWhiteSpace();  //æ¯”å¦‚å†…å®¹ä¸ºfiletypeï¼Œæˆ–è€…station1ä¹‹ç±»
+			right = str.mid(nEqualSignPos + 1).stripWhiteSpace(); //posä½ç½®åœ¨ç­‰å·ï¼Œå–ç­‰å·å³è¾¹çš„æ•°
 			right.replace(";",""); 
-			//ÌáÈ¡right²¿·Ö£¬±ÈÈçÄÚÈİÎª"1,#3"£¬µÚÒ»¸öÊÇID£¬µÚÈı¸öÊÇRecordID£¬°´Ë³ĞòĞ´ÈëÒ»¸övector
-			//unsigned int nChnCommaPos = str.find(L'£¬'); //clw note£ºÕâÀïÓÉÓÚÊÇÖĞÎÄ¶ººÅ£¬ËùÒÔÒ»¶¨ÒªÊÇË«ÒıºÅ£¬¼´find×Ö·û´®£»Èç¹ûÊÇÓÃµ¥ÒıºÅ''Ó¦ÊÇ¿í×Ö·ûwchar_t£¬Ğè¼ÓLÇ°×º£»
-			string::size_type nChnCommaPos = str.find("£¬"); //clw note£ºÈç¹ûÊÇunsigned int£¬ÕâÀï½á¹ûÔÚlinuxºÍwindows¶¼ÊÇ429496725£¬µ«ÊÇlinuxÏÂstring::nposÊÇsize_typeÀàĞÍ£¬Ïàµ±ÓÚlong long£¬ËùÒÔ²»ÄÜĞ´³Éunsigned int
+			//æå–rightéƒ¨åˆ†ï¼Œæ¯”å¦‚å†…å®¹ä¸º"1,#3"ï¼Œç¬¬ä¸€ä¸ªæ˜¯IDï¼Œç¬¬ä¸‰ä¸ªæ˜¯RecordIDï¼ŒæŒ‰é¡ºåºå†™å…¥ä¸€ä¸ªvector
+			//unsigned int nChnCommaPos = str.find(L'ï¼Œ'); //clw noteï¼šè¿™é‡Œç”±äºæ˜¯ä¸­æ–‡é€—å·ï¼Œæ‰€ä»¥ä¸€å®šè¦æ˜¯åŒå¼•å·ï¼Œå³findå­—ç¬¦ä¸²ï¼›å¦‚æœæ˜¯ç”¨å•å¼•å·''åº”æ˜¯å®½å­—ç¬¦wchar_tï¼Œéœ€åŠ Lå‰ç¼€ï¼›
+			string::size_type nChnCommaPos = str.find("ï¼Œ"); //clw noteï¼šå¦‚æœæ˜¯unsigned intï¼Œè¿™é‡Œç»“æœåœ¨linuxå’Œwindowséƒ½æ˜¯429496725ï¼Œä½†æ˜¯linuxä¸‹string::nposæ˜¯size_typeç±»å‹ï¼Œç›¸å½“äºlong longï¼Œæ‰€ä»¥ä¸èƒ½å†™æˆunsigned int
 			string::size_type nEngCommaPos = str.find(',');
 
-			//Èç¹ûÕÒ²»µ½¶ººÅ£¬ËµÃ÷ÊÇÒ»°ãÅäÖÃÏî£¬Èçfiletype=RNMXFHYC£¬´æÈëm_map_nameInfo
-			if(nChnCommaPos == string::npos  && nEngCommaPos == string::npos)  //clw note£º
+			//å¦‚æœæ‰¾ä¸åˆ°é€—å·ï¼Œè¯´æ˜æ˜¯ä¸€èˆ¬é…ç½®é¡¹ï¼Œå¦‚filetype=RNMXFHYCï¼Œå­˜å…¥m_map_nameInfo
+			if(nChnCommaPos == string::npos  && nEngCommaPos == string::npos)  //clw noteï¼š
 			{
 				if(left == "filedeletecycle")
 				{
@@ -338,29 +320,29 @@ bool FileParser::ReadInConfigPara()
 					continue;
 				}
 
-				if(iniFileInfo.m_map_nameInfo.end() != iniFileInfo.m_map_nameInfo.find(left.toStdString()))//ÖØ¸´µÄÔªËØ
+				if(iniFileInfo.m_map_nameInfo.end() != iniFileInfo.m_map_nameInfo.find(left.toStdString()))//é‡å¤çš„å…ƒç´ 
 				{
-					//printf("clw£º¸²¸ÇiniµÄÒ»°ãÅäÖÃÏî, left = %s, right = %s\n", left.toLatin1().data(), right.toLatin1().data());
+					//printf("clwï¼šè¦†ç›–iniçš„ä¸€èˆ¬é…ç½®é¡¹, left = %s, right = %s\n", left.toLatin1().data(), right.toLatin1().data());
 					iniFileInfo.m_map_nameInfo[left.toStdString()] = right.toStdString();
 				} 
-				else// ·ÇÖØ¸´ÔªËØ£¬¼´ĞÂÔªËØ»òm_map_nameInfo.empty()µÚÒ»¸öÔªËØ
+				else// éé‡å¤å…ƒç´ ï¼Œå³æ–°å…ƒç´ æˆ–m_map_nameInfo.empty()ç¬¬ä¸€ä¸ªå…ƒç´ 
 				{
-					//printf("clw£º²åÈëiniµÄÒ»°ãÅäÖÃÏî, left = %s, right = %s\n", left.toLatin1().data(), right.toLatin1().data());
+					//printf("clwï¼šæ’å…¥iniçš„ä¸€èˆ¬é…ç½®é¡¹, left = %s, right = %s\n", left.toLatin1().data(), right.toLatin1().data());
 					iniFileInfo.m_map_nameInfo.insert(pair<string,string>(left.toStdString(),right.toStdString()));
 				}	
 				bSuc = true;
 			}
-			//Èç¹ûÄÜÕÒµ½¶ººÅ£¬ËµÃ÷ÊÇÊıÖµÅäÖÃÏî£¬Èçstation1=1,10,#3;
+			//å¦‚æœèƒ½æ‰¾åˆ°é€—å·ï¼Œè¯´æ˜æ˜¯æ•°å€¼é…ç½®é¡¹ï¼Œå¦‚station1=1,10,#3;
 			else if(nChnCommaPos != string::npos && nEngCommaPos == string::npos ||
 				nChnCommaPos == string::npos && nEngCommaPos != string::npos)
 			{
-				//printf("clw£ºÄÜÕÒµ½¶ººÅ£¬ËµÃ÷ÊÇÊıÖµÅäÖÃÏî£¬×¼±¸¶ÁÈ¡\n");
-				//Í¬Ê±Ö§³ÖÖĞÎÄºÍÓ¢ÎÄ¶ººÅ
+				//printf("clwï¼šèƒ½æ‰¾åˆ°é€—å·ï¼Œè¯´æ˜æ˜¯æ•°å€¼é…ç½®é¡¹ï¼Œå‡†å¤‡è¯»å–\n");
+				//åŒæ—¶æ”¯æŒä¸­æ–‡å’Œè‹±æ–‡é€—å·
 				wchar_t chComma;
 				int nComma1Pos;
 				if(nChnCommaPos != string::npos)
 				{
-					chComma = '£¬';
+					chComma = 'ï¼Œ';
 					nComma1Pos = nChnCommaPos;
 				}
 				else                              
@@ -369,25 +351,25 @@ bool FileParser::ReadInConfigPara()
 					nComma1Pos = nEngCommaPos;
 				}
 
-				//clw note£ºstr.rightÊÇ´ÓÓÒ±ß½ç¿ªÊ¼ÍùÇ°ÃæÈ¡x¸ö×Ö½Ú£¬¶ø²»ÊÇ´ÓÄ³¸öÎ»ÖÃxµ½½áÎ²£¬²»ÒªÂÒÓÃ¡£¡£
+				//clw noteï¼šstr.rightæ˜¯ä»å³è¾¹ç•Œå¼€å§‹å¾€å‰é¢å–xä¸ªå­—èŠ‚ï¼Œè€Œä¸æ˜¯ä»æŸä¸ªä½ç½®xåˆ°ç»“å°¾ï¼Œä¸è¦ä¹±ç”¨ã€‚ã€‚
 				strID = str.mid(nEqualSignPos + 1, nComma1Pos - nEqualSignPos - 1).stripWhiteSpace(); 
 				strRecordID = str.mid(nComma1Pos + 1).stripWhiteSpace();
-				strRecordID.replace("#","");   //²Ù×÷Ç°ÄÚÈİĞÎÈç#3;
+				strRecordID.replace("#","");   //æ“ä½œå‰å†…å®¹å½¢å¦‚#3;
 				strRecordID.replace(";","");
 
-				//´æ´¢iniÅäÖÃÎÄ¼ş³§Õ¾idÖµÓë¶ÔÓ¦µÄtxt¼ÇÂ¼µÄidÖµ£¬Èçstation1=1£¬#3;
+				//å­˜å‚¨inié…ç½®æ–‡ä»¶å‚ç«™idå€¼ä¸å¯¹åº”çš„txtè®°å½•çš„idå€¼ï¼Œå¦‚station1=1ï¼Œ#3;
 				vector<string> tmpVec;
 				tmpVec.push_back(strID.toStdString());
 				tmpVec.push_back(strRecordID.toStdString());
-				//printf("clw£ºÔÚ¶ÁÈ¡iniÅäÖÃÎÄ¼şÊ±, strRecordID = %s\n", strRecordID.toLatin1().data());
-				if(iniFileInfo.m_map_nameVals.end() != iniFileInfo.m_map_nameVals.find(left.toStdString()))//ÖØ¸´µÄÔªËØ
+				//printf("clwï¼šåœ¨è¯»å–inié…ç½®æ–‡ä»¶æ—¶, strRecordID = %s\n", strRecordID.toLatin1().data());
+				if(iniFileInfo.m_map_nameVals.end() != iniFileInfo.m_map_nameVals.find(left.toStdString()))//é‡å¤çš„å…ƒç´ 
 				{
-					//printf("clw£º¸²¸ÇiniµÄÊıÖµÅäÖÃÏî, left = %s, right = %s\n", left.toLatin1().data(), (strID + strRecordID).toLatin1().data());
+					//printf("clwï¼šè¦†ç›–iniçš„æ•°å€¼é…ç½®é¡¹, left = %s, right = %s\n", left.toLatin1().data(), (strID + strRecordID).toLatin1().data());
 					iniFileInfo.m_map_nameVals[left.toStdString()] = tmpVec;
 				} 
-				else //·ÇÖØ¸´ÔªËØ£¬¼´ĞÂÔªËØ»òm_map_nameVal.empty()µÚÒ»¸öÔªËØ
+				else //éé‡å¤å…ƒç´ ï¼Œå³æ–°å…ƒç´ æˆ–m_map_nameVal.empty()ç¬¬ä¸€ä¸ªå…ƒç´ 
 				{
-					//printf("clw£º²åÈëiniµÄÊıÖµÅäÖÃÏî, left = %s, right = %s\n", left.toLatin1().data(), (strID + strRecordID).toLatin1().data());
+					//printf("clwï¼šæ’å…¥iniçš„æ•°å€¼é…ç½®é¡¹, left = %s, right = %s\n", left.toLatin1().data(), (strID + strRecordID).toLatin1().data());
 					iniFileInfo.m_map_nameVals.insert(pair<string, vector<string> >(left.toStdString(), tmpVec));
 				}
 				bSuc = true;
@@ -398,17 +380,17 @@ bool FileParser::ReadInConfigPara()
 		}
 	}
 
-	//Èç¹ûstrFileInfo»¹ÓĞÄÚÈİ£¬ÒòÎªÒ»°ã×îºóÊÇÃ»ÓĞ¿ÕĞĞµÄ£¬¶ø´ËÊ±×îºóÒ»¸öÎÄ¼şµÄÅäÖÃĞÅÏ¢ÉĞÎ´±£´æ
+	//å¦‚æœstrFileInfoè¿˜æœ‰å†…å®¹ï¼Œå› ä¸ºä¸€èˆ¬æœ€åæ˜¯æ²¡æœ‰ç©ºè¡Œçš„ï¼Œè€Œæ­¤æ—¶æœ€åä¸€ä¸ªæ–‡ä»¶çš„é…ç½®ä¿¡æ¯å°šæœªä¿å­˜
 	if(!iniFileInfo.m_map_nameInfo.empty() || !iniFileInfo.m_map_nameVals.empty())
 	{
-		//Ôò½«stFileInfo¶ÔÏó´æÈëm_vecFilesInfo£»
+		//åˆ™å°†stFileInfoå¯¹è±¡å­˜å…¥m_vecFilesInfoï¼›
 		m_vecFilesInfo.push_back(iniFileInfo);
 	}	
 
 	if(m_vecFilesInfo.empty())
 	{
-		printf("clw£º¶ÁÈ¡esfilesetting.iniÎÄ¼şÊ§°Ü£¬Î´»ñÈ¡µ½ÕıÈ·µÄĞÅÏ¢£¡\n");
-		WriteDailyLog(true, "clw£º¶ÁÈ¡esfilesetting.iniÎÄ¼şÊ§°Ü£¬Î´»ñÈ¡µ½ÕıÈ·µÄĞÅÏ¢£¡\n");
+		printf("clwï¼šè¯»å–esfilesetting.iniæ–‡ä»¶å¤±è´¥ï¼Œæœªè·å–åˆ°æ­£ç¡®çš„ä¿¡æ¯ï¼\n");
+		WriteDailyLog(true, "clwï¼šè¯»å–esfilesetting.iniæ–‡ä»¶å¤±è´¥ï¼Œæœªè·å–åˆ°æ­£ç¡®çš„ä¿¡æ¯ï¼\n");
 		bSuc = false;
 	}
 
@@ -417,11 +399,11 @@ bool FileParser::ReadInConfigPara()
 }
 
 
-//¸ù¾İÎÄ¼şÂ·¾¶»ñÈ¡ÎÄ¼şÃû
+//æ ¹æ®æ–‡ä»¶è·¯å¾„è·å–æ–‡ä»¶å
 string FileParser::GetFileNameByPath(const string& filepath)
 {
 	QStringList qStrList = QString::fromStdString(filepath).split("/");
-	return qStrList[qStrList.length() - 1].toStdString(); //ÎÄ¼şÃû£¬Èçxxx.TXT
+	return qStrList[qStrList.length() - 1].toStdString(); //æ–‡ä»¶åï¼Œå¦‚xxx.TXT
 }
 
 
@@ -430,41 +412,41 @@ bool FileParser::ParseESFile(const char filepath[])
 	string fileName = GetFileNameByPath(filepath);
 	if(g_IsDebug)
 	{
-		printf("clw£ºÎÄ¼şÃû£º%s\n", fileName.c_str());
-		WriteDailyLog(true, "clw£ºÎÄ¼şÃû£º%s\n", fileName.c_str());
+		printf("clwï¼šæ–‡ä»¶åï¼š%s\n", fileName.c_str());
+		WriteDailyLog(true, "clwï¼šæ–‡ä»¶åï¼š%s\n", fileName.c_str());
 	}
 	
 	int nVecFilesLen = m_vecFilesInfo.size();
-	//Ê×ÏÈÅĞ¶ÏÎÄ¼şÀàĞÍ
+	//é¦–å…ˆåˆ¤æ–­æ–‡ä»¶ç±»å‹
 
 	int i;
 	string fileType;
 	for(i=0; i < nVecFilesLen; ++i)
 	{
 		fileType = m_vecFilesInfo[i].m_map_nameInfo["filetype"];
-		if(fileName.find(fileType) != string::npos) //ÕÒµ½ÎÄ¼şÀàĞÍ
+		if(fileName.find(fileType) != string::npos) //æ‰¾åˆ°æ–‡ä»¶ç±»å‹
 		{
-			//±£´æÔ¤²âÎÄ¼şµÄÊ±¼äm_strForcastTime£¬Ğ´±íµÄÊ±ºòÒªÓÃµ½£»
-			//Èç³¬¶ÌÆÚÔ¤²âÎÄ¼şµÄ20190603_1540´ú±í2019.06.03 15:40:00
-			//¶ÌÆÚÔ¤²âÎÄ¼şµÄ20190603´ú±í2019.06.03£¬ºóÆÚ×ª³É00:00:00
+			//ä¿å­˜é¢„æµ‹æ–‡ä»¶çš„æ—¶é—´m_strForcastTimeï¼Œå†™è¡¨çš„æ—¶å€™è¦ç”¨åˆ°ï¼›
+			//å¦‚è¶…çŸ­æœŸé¢„æµ‹æ–‡ä»¶çš„20190603_1540ä»£è¡¨2019.06.03 15:40:00
+			//çŸ­æœŸé¢„æµ‹æ–‡ä»¶çš„20190603ä»£è¡¨2019.06.03ï¼ŒåæœŸè½¬æˆ00:00:00
 			string fileFormat = m_vecFilesInfo[i].m_map_nameInfo["fileformat"];
 			string::size_type nTimeHourPos = fileFormat.find("hhmm");
 			string::size_type nTimeYearPos = fileFormat.find("yyyy");
-			if(nTimeHourPos != string::npos) //Èç¹ûÄÜÕÒµ½Ğ¡Ê±ºÍ·ÖÖÓĞÅÏ¢£¬ËµÃ÷ÊÇÈÕÄÚ/³¬¶ÌÆÚÔ¤²â
+			if(nTimeHourPos != string::npos) //å¦‚æœèƒ½æ‰¾åˆ°å°æ—¶å’Œåˆ†é’Ÿä¿¡æ¯ï¼Œè¯´æ˜æ˜¯æ—¥å†…/è¶…çŸ­æœŸé¢„æµ‹
 			{
 				m_strForcastTime = QString::fromStdString(fileName.substr(nTimeYearPos, 8)) + QString::fromStdString(fileName.substr(nTimeHourPos, 4));
 				
 				//m_strForcastTime = QString::fromStdString(fileName.substr(nTimeLeftPos, 13));
 				//m_strForcastTime.remove("_");
 			}
-			else if(nTimeYearPos != string::npos) //Ö»ÕÒµ½Äê£¬ËµÃ÷ÊÇÈÕÇ°/¶ÌÆÚÔ¤²â
+			else if(nTimeYearPos != string::npos) //åªæ‰¾åˆ°å¹´ï¼Œè¯´æ˜æ˜¯æ—¥å‰/çŸ­æœŸé¢„æµ‹
 			{
 				m_strForcastTime = QString::fromStdString(fileName.substr(nTimeYearPos, 8));
 			}
-			if(!IsDigitStr(m_strForcastTime)) //Èç¹ûÌáÈ¡µ½µÄÊ±¼äÀïÓĞ·Ç´¿Êı×ÖµÄÄÚÈİ£¬±ÈÈç0190101_»òÕßabcdefghÖ®Àà
+			if(!IsDigitStr(m_strForcastTime)) //å¦‚æœæå–åˆ°çš„æ—¶é—´é‡Œæœ‰éçº¯æ•°å­—çš„å†…å®¹ï¼Œæ¯”å¦‚0190101_æˆ–è€…abcdefghä¹‹ç±»
 			{
-				printf("clw£ºÌáÈ¡µ½µÄÔ¤²âÊ±¼äÎª%s£¬Çë¼ì²éesfilesetting.iniÖĞÅäÖÃµÄfileformatÓëÎÄ¼şÃûÊÇ·ñÒ»ÖÂ£¡", m_strForcastTime.toLatin1().data());
-				WriteDailyLog(true, "clw£ºÌáÈ¡µ½µÄÔ¤²âÊ±¼äÎª%s£¬Çë¼ì²éesfilesetting.iniÖĞÅäÖÃµÄfileformatÓëÎÄ¼şÃûÊÇ·ñÒ»ÖÂ£¡", m_strForcastTime.toLatin1().data());
+				printf("clwï¼šæå–åˆ°çš„é¢„æµ‹æ—¶é—´ä¸º%sï¼Œè¯·æ£€æŸ¥esfilesetting.iniä¸­é…ç½®çš„fileformatä¸æ–‡ä»¶åæ˜¯å¦ä¸€è‡´ï¼", m_strForcastTime.toLatin1().data());
+				WriteDailyLog(true, "clwï¼šæå–åˆ°çš„é¢„æµ‹æ—¶é—´ä¸º%sï¼Œè¯·æ£€æŸ¥esfilesetting.iniä¸­é…ç½®çš„fileformatä¸æ–‡ä»¶åæ˜¯å¦ä¸€è‡´ï¼", m_strForcastTime.toLatin1().data());
 				return false;
 			}
 			break;
@@ -472,73 +454,73 @@ bool FileParser::ParseESFile(const char filepath[])
 	}
 	if(i == nVecFilesLen)
 	{
-		//ÎŞ´ËÎÄ¼şÀàĞÍ
-		printf("clw£ºesfilesetting.iniÖĞÎŞ´ËÀàĞÍµÄÎÄ¼ş£¡ÎÄ¼şÃûÎª£º%s\n", fileName.c_str());
-		WriteDailyLog(true, "clw£ºesfilesetting.iniÖĞÎŞ´ËÀàĞÍµÄÎÄ¼ş£¡ÎÄ¼şÃûÎª£º%s\n", fileName.c_str());
+		//æ— æ­¤æ–‡ä»¶ç±»å‹
+		printf("clwï¼šesfilesetting.iniä¸­æ— æ­¤ç±»å‹çš„æ–‡ä»¶ï¼æ–‡ä»¶åä¸ºï¼š%s\n", fileName.c_str());
+		WriteDailyLog(true, "clwï¼šesfilesetting.iniä¸­æ— æ­¤ç±»å‹çš„æ–‡ä»¶ï¼æ–‡ä»¶åä¸ºï¼š%s\n", fileName.c_str());
 		return false;
 	}
 
-	//¼ÇÂ¼Ë÷ÒıºÅ£¬ÒòÎª±ÈÈçRNMXFHYCÀàĞÍµÄÒ»¸öÎÄ¼şÍ¬Ê±¶ÔÓ¦³¬¶ÌÆÚ¸ººÉÔ¤²â¼°³¬¶ÌÆÚ·¢µçÔ¤²âÁ½¸ö±í
-	//ÁíÍâÅĞ¶ÏÔ¤²âÊ±¼ä¸ñÊ½ÊÇ·ñÕıÈ·
+	//è®°å½•ç´¢å¼•å·ï¼Œå› ä¸ºæ¯”å¦‚RNMXFHYCç±»å‹çš„ä¸€ä¸ªæ–‡ä»¶åŒæ—¶å¯¹åº”è¶…çŸ­æœŸè´Ÿè·é¢„æµ‹åŠè¶…çŸ­æœŸå‘ç”µé¢„æµ‹ä¸¤ä¸ªè¡¨
+	//å¦å¤–åˆ¤æ–­é¢„æµ‹æ—¶é—´æ ¼å¼æ˜¯å¦æ­£ç¡®
 	for(int i = 0; i < nVecFilesLen; ++i)
 	{
-		//ÅĞ¶ÏiniÎÄ¼şÊÇ·ñº¬ÓĞ¸ÃTXTÎÄ¼şÀàĞÍ£¬Èç¹ûÓĞ£¬²ÅÄÜ¿ªÊ¼½âÎöÎÄ¼ş£»
-		//Ö®Ç°´Óini»ñÈ¡ÁËËùÓĞÎÄ¼şµÄÅäÖÃĞÅÏ¢m_vecFilesInfo
-		//printf("clw£ºm_vecFilesInfo[i].m_map_nameInfo['filetype'] = %s\n", m_vecFilesInfo[i].m_map_nameInfo["filetype"].c_str());
+		//åˆ¤æ–­iniæ–‡ä»¶æ˜¯å¦å«æœ‰è¯¥TXTæ–‡ä»¶ç±»å‹ï¼Œå¦‚æœæœ‰ï¼Œæ‰èƒ½å¼€å§‹è§£ææ–‡ä»¶ï¼›
+		//ä¹‹å‰ä»iniè·å–äº†æ‰€æœ‰æ–‡ä»¶çš„é…ç½®ä¿¡æ¯m_vecFilesInfo
+		//printf("clwï¼šm_vecFilesInfo[i].m_map_nameInfo['filetype'] = %s\n", m_vecFilesInfo[i].m_map_nameInfo["filetype"].c_str());
 		if(m_vecFilesInfo[i].m_map_nameInfo["filetype"] == fileType)
 		{
-			m_vecFilesInfoIndex.push_back(i); //¼ÇÂ¼¸ÃÎÄ¼ş¶ÔÓ¦µÄÎÄ¼ş½á¹¹ÌåË÷ÒıºÅ£¬·½±ãÒÔºóÊ¹ÓÃ
+			m_vecFilesInfoIndex.push_back(i); //è®°å½•è¯¥æ–‡ä»¶å¯¹åº”çš„æ–‡ä»¶ç»“æ„ä½“ç´¢å¼•å·ï¼Œæ–¹ä¾¿ä»¥åä½¿ç”¨
 		}	
 
-		if(fileType == FILETYPE_ULTRALOAD || fileType == FILETYPE_ULTRAXNY || fileType == FILETYPE_AGCRN) //Èç201906031415
+		if(fileType == FILETYPE_ULTRALOAD || fileType == FILETYPE_ULTRAXNY || fileType == FILETYPE_AGCRN) //å¦‚201906031415
 		{
 			if(m_strForcastTime.size() != 12)
 			{
-				printf("clw£ºÇë¼ì²éesfilesetting.iniÖĞÅäÖÃµÄfileformat¸ñÊ½ÊÇ·ñÕıÈ·£¡fileType = %s\n", fileType.c_str());
-				WriteDailyLog(true, "clw£ºÇë¼ì²éesfilesetting.iniÖĞÅäÖÃµÄfileformat¸ñÊ½ÊÇ·ñÕıÈ·£¡fileType = %s\n", fileType.c_str());
+				printf("clwï¼šè¯·æ£€æŸ¥esfilesetting.iniä¸­é…ç½®çš„fileformatæ ¼å¼æ˜¯å¦æ­£ç¡®ï¼fileType = %s\n", fileType.c_str());
+				WriteDailyLog(true, "clwï¼šè¯·æ£€æŸ¥esfilesetting.iniä¸­é…ç½®çš„fileformatæ ¼å¼æ˜¯å¦æ­£ç¡®ï¼fileType = %s\n", fileType.c_str());
 				return false;
 			}
 		}
 
-		if(fileType == FILETYPE_SHORTLOAD || fileType == FILETYPE_SHORTLOAD1 || fileType == FILETYPE_SHORTXNY || fileType == FILETYPE_AGCRQ) //Èç20190603
+		if(fileType == FILETYPE_SHORTLOAD || fileType == FILETYPE_SHORTLOAD1 || fileType == FILETYPE_SHORTXNY || fileType == FILETYPE_AGCRQ) //å¦‚20190603
 		{
 			if(m_strForcastTime.size() != 8)
 			{
-				printf("clw£ºÇë¼ì²éesfilesetting.iniÖĞÅäÖÃµÄfileformat¸ñÊ½ÊÇ·ñÕıÈ·£¡\n");
-				WriteDailyLog(true, "clw£ºÇë¼ì²éesfilesetting.iniÖĞÅäÖÃµÄfileformat¸ñÊ½ÊÇ·ñÕıÈ·£¡\n");
+				printf("clwï¼šè¯·æ£€æŸ¥esfilesetting.iniä¸­é…ç½®çš„fileformatæ ¼å¼æ˜¯å¦æ­£ç¡®ï¼\n");
+				WriteDailyLog(true, "clwï¼šè¯·æ£€æŸ¥esfilesetting.iniä¸­é…ç½®çš„fileformatæ ¼å¼æ˜¯å¦æ­£ç¡®ï¼\n");
 				return false;
 			}
 		}
 	}
 
-	//´ò¿ªÎÄ¼ş
+	//æ‰“å¼€æ–‡ä»¶
 	FILE* fp = fopen(filepath, "r");
 	if(fp == NULL)
 	{
-		printf("clw£º´ò¿ªÎÄ¼ş%sÊ§°Ü£¡\n", filepath);
-		WriteDailyLog(true, "clw£º´ò¿ªÎÄ¼ş%sÊ§°Ü£¡\n", filepath);
+		printf("clwï¼šæ‰“å¼€æ–‡ä»¶%så¤±è´¥ï¼\n", filepath);
+		WriteDailyLog(true, "clwï¼šæ‰“å¼€æ–‡ä»¶%så¤±è´¥ï¼\n", filepath);
 		return false;
 	}
 
 	/*
-	* int fseek(FILE *stream, long offset, int fromwhere);º¯ÊıÉèÖÃÎÄ¼şÖ¸ÕëstreamµÄÎ»ÖÃ¡£
-	* Èç¹ûÖ´ĞĞ³É¹¦£¬stream½«Ö¸ÏòÒÔfromwhereÎª»ù×¼£¬Æ«ÒÆoffset(Ö¸ÕëÆ«ÒÆÁ¿)¸ö×Ö½ÚµÄÎ»ÖÃ£¬º¯Êı·µ»Ø0¡£
-	* Èç¹ûÖ´ĞĞÊ§°Ü(±ÈÈçoffsetÈ¡Öµ´óÓÚµÈÓÚ2*1024*1024*1024£¬¼´longµÄÕıÊı·¶Î§2G)£¬Ôò²»¸Ä±ästreamÖ¸ÏòµÄÎ»ÖÃ£¬º¯Êı·µ»ØÒ»¸ö·Ç0Öµ¡£
-	* fseekº¯ÊıºÍlseekº¯ÊıÀàËÆ£¬µ«lseek·µ»ØµÄÊÇÒ»¸öoff_tÊıÖµ£¬¶øfseek·µ»ØµÄÊÇÒ»¸öÕûĞÍ¡£
+	* int fseek(FILE *stream, long offset, int fromwhere);å‡½æ•°è®¾ç½®æ–‡ä»¶æŒ‡é’ˆstreamçš„ä½ç½®ã€‚
+	* å¦‚æœæ‰§è¡ŒæˆåŠŸï¼Œstreamå°†æŒ‡å‘ä»¥fromwhereä¸ºåŸºå‡†ï¼Œåç§»offset(æŒ‡é’ˆåç§»é‡)ä¸ªå­—èŠ‚çš„ä½ç½®ï¼Œå‡½æ•°è¿”å›0ã€‚
+	* å¦‚æœæ‰§è¡Œå¤±è´¥(æ¯”å¦‚offsetå–å€¼å¤§äºç­‰äº2*1024*1024*1024ï¼Œå³longçš„æ­£æ•°èŒƒå›´2G)ï¼Œåˆ™ä¸æ”¹å˜streamæŒ‡å‘çš„ä½ç½®ï¼Œå‡½æ•°è¿”å›ä¸€ä¸ªé0å€¼ã€‚
+	* fseekå‡½æ•°å’Œlseekå‡½æ•°ç±»ä¼¼ï¼Œä½†lseekè¿”å›çš„æ˜¯ä¸€ä¸ªoff_tæ•°å€¼ï¼Œè€Œfseekè¿”å›çš„æ˜¯ä¸€ä¸ªæ•´å‹ã€‚
 	*/
-	fseek(fp, 0, SEEK_END); //ÈÃÎÄ¼şÖ¸ÕëÖ¸ÏòÎÄ¼şÎ²
+	fseek(fp, 0, SEEK_END); //è®©æ–‡ä»¶æŒ‡é’ˆæŒ‡å‘æ–‡ä»¶å°¾
 	int len = ftell(fp);
-	fseek(fp, 0, SEEK_SET); //°ÑÎÄ¼şÖ¸Õë»¹Ô­µ½ÎÄ¼ş¿ªÍ·
+	fseek(fp, 0, SEEK_SET); //æŠŠæ–‡ä»¶æŒ‡é’ˆè¿˜åŸåˆ°æ–‡ä»¶å¼€å¤´
 
 
-	//Òª±£Ö¤ÒÔ'\0'½áÎ²£¬ËùÒÔ¶îÍâ·ÖÅäÁËÒ»¸ö×Ö½Ú£¬¼´len+1£»¶ÁÊı¾İµÄÊ±ºò£¬Ö»¶Álen¸ö×Ö½Ú¡£
-	char *pTxtBuf = (char*)malloc((len + 1) * sizeof(char));  //¹ÊÒâ¶Ômalloc·ÖÅäµÄÄÚ´æ½øĞĞÔ½½ç·ÃÎÊ¾¹È»Ã»±¨´í£¨cÓïÑÔ£©c/c++ÓïÑÔµÄÎ£ÏÕ¾ÍÔÚÕâ¡£ÄãÖ»Òª²»È¥¶¯²Ù×÷ÏµÍ³±£ÁôµÄÄÚ´æ£¬³ÌĞò¾Í²»»áËÀ¡£
-	//ÓĞĞ©Ê±ºòÄÚ´æÔ½½ç»¹»áÓ°Ïì³ÌĞòÁ÷³Ì£¬±ÈÈçforÑ­»·¿ØÖÆ±äÁ¿Îªi£¬ÔÚforÑ­»·ÄÚ²¿½øĞĞÄÚ´æÉêÇë£¬Èç¹û¿ØÖÆ²»ºÃ¾ÍÓĞ¿ÉÄÜÎŞÒâµÄĞŞ¸ÄiµÄÖµ£¬µ¼ÖÂÑ­»·´ÎÊıÓĞ´í£¬ÉõÖÁµ¼ÖÂÕâ¸öforÑ­»·ËÀ³ÉÑ­»·¡£
+	//è¦ä¿è¯ä»¥'\0'ç»“å°¾ï¼Œæ‰€ä»¥é¢å¤–åˆ†é…äº†ä¸€ä¸ªå­—èŠ‚ï¼Œå³len+1ï¼›è¯»æ•°æ®çš„æ—¶å€™ï¼Œåªè¯»lenä¸ªå­—èŠ‚ã€‚
+	char *pTxtBuf = (char*)malloc((len + 1) * sizeof(char));  //æ•…æ„å¯¹mallocåˆ†é…çš„å†…å­˜è¿›è¡Œè¶Šç•Œè®¿é—®ç«Ÿç„¶æ²¡æŠ¥é”™ï¼ˆcè¯­è¨€ï¼‰c/c++è¯­è¨€çš„å±é™©å°±åœ¨è¿™ã€‚ä½ åªè¦ä¸å»åŠ¨æ“ä½œç³»ç»Ÿä¿ç•™çš„å†…å­˜ï¼Œç¨‹åºå°±ä¸ä¼šæ­»ã€‚
+	//æœ‰äº›æ—¶å€™å†…å­˜è¶Šç•Œè¿˜ä¼šå½±å“ç¨‹åºæµç¨‹ï¼Œæ¯”å¦‚forå¾ªç¯æ§åˆ¶å˜é‡ä¸ºiï¼Œåœ¨forå¾ªç¯å†…éƒ¨è¿›è¡Œå†…å­˜ç”³è¯·ï¼Œå¦‚æœæ§åˆ¶ä¸å¥½å°±æœ‰å¯èƒ½æ— æ„çš„ä¿®æ”¹içš„å€¼ï¼Œå¯¼è‡´å¾ªç¯æ¬¡æ•°æœ‰é”™ï¼Œç”šè‡³å¯¼è‡´è¿™ä¸ªforå¾ªç¯æ­»æˆå¾ªç¯ã€‚
 	memset(pTxtBuf, 0, len + 1); 
-	fread(pTxtBuf, sizeof(char), len, fp); //freadÊÇÒ»¸öº¯Êı£¬Ëü´ÓÎÄ¼şÁ÷ÖĞ¶ÁÊı¾İ£¬×î¶à¶ÁÈ¡count¸öÏî£¬Ã¿¸öÏîsize¸ö×Ö½Ú£¬Èç¹ûµ÷ÓÃ³É¹¦·µ»ØÊµ¼Ê¶ÁÈ¡µ½µÄÏî¸öÊı£¨Ğ¡ÓÚ»òµÈÓÚcount£©£¬Èç¹û²»³É¹¦»ò¶Áµ½ÎÄ¼şÄ©Î²·µ»Ø 0¡£
+	fread(pTxtBuf, sizeof(char), len, fp); //freadæ˜¯ä¸€ä¸ªå‡½æ•°ï¼Œå®ƒä»æ–‡ä»¶æµä¸­è¯»æ•°æ®ï¼Œæœ€å¤šè¯»å–countä¸ªé¡¹ï¼Œæ¯ä¸ªé¡¹sizeä¸ªå­—èŠ‚ï¼Œå¦‚æœè°ƒç”¨æˆåŠŸè¿”å›å®é™…è¯»å–åˆ°çš„é¡¹ä¸ªæ•°ï¼ˆå°äºæˆ–ç­‰äºcountï¼‰ï¼Œå¦‚æœä¸æˆåŠŸæˆ–è¯»åˆ°æ–‡ä»¶æœ«å°¾è¿”å› 0ã€‚
 
 
-	//±éÀúm_map_nameVals
+	//éå†m_map_nameVals
 	//int len = m_vecFilesInfo[nFilesInfoIndex].m_map_nameVals.size();
 	int nVecFilelen = m_vecFilesInfoIndex.size();
 	for(int i = 0; i < nVecFilelen; ++i)
@@ -548,50 +530,50 @@ bool FileParser::ParseESFile(const char filepath[])
 		{
 			char strRecordID[BUF_LEN_MIN] = {0};
 
-			strncpy(strRecordID, iter->second[1].c_str(), BUF_LEN_MIN - 1);//Èç#3£¬ÔÚÕâÀïÖ»±£Áô3
+			strncpy(strRecordID, iter->second[1].c_str(), BUF_LEN_MIN - 1);//å¦‚#3ï¼Œåœ¨è¿™é‡Œåªä¿ç•™3
 
 			int nRecordID = atoi(strRecordID); 
 			if(nRecordID > INT_MAX)
 			{
 				//error1
-				printf("clw£ºstrRecordIDÖµ³¬INT_MAXÉÏÏŞ£¡\n");
-				WriteDailyLog(true, "clw£ºstrRecordIDÖµ³¬INT_MAXÉÏÏŞ£¡\n");
+				printf("clwï¼šstrRecordIDå€¼è¶…INT_MAXä¸Šé™ï¼\n");
+				WriteDailyLog(true, "clwï¼šstrRecordIDå€¼è¶…INT_MAXä¸Šé™ï¼\n");
 				free(pTxtBuf);
 				fclose(fp);
 				return false;
 			}
 
 			char* pBegin = NULL;
-			//¶¨Î»µ½txtÖĞ#idµÄÎ»ÖÃ£¨Ä©Î²£©£¬Ğ´ÈëpBegin£»
+			//å®šä½åˆ°txtä¸­#idçš„ä½ç½®ï¼ˆæœ«å°¾ï¼‰ï¼Œå†™å…¥pBeginï¼›
 			if(!GetTxtPositionByIni(nRecordID, pTxtBuf, &pBegin))
 			{
-				printf("clw£º´ÓtxtÖĞ»ñÈ¡¼ÇÂ¼Ê§°Ü£¡\n");
-				WriteDailyLog(true, "clw£º´ÓtxtÖĞ»ñÈ¡¼ÇÂ¼Ê§°Ü£¡\n");
+				printf("clwï¼šä»txtä¸­è·å–è®°å½•å¤±è´¥ï¼\n");
+				WriteDailyLog(true, "clwï¼šä»txtä¸­è·å–è®°å½•å¤±è´¥ï¼\n");
 				free(pTxtBuf);
 				fclose(fp);
 				return false;
 			}
 
-			//½«¸ÃĞĞĞÅÏ¢Ğ´ÈëÄÚ´æ
+			//å°†è¯¥è¡Œä¿¡æ¯å†™å…¥å†…å­˜
 			char *pEnd = strchr(pBegin, '\n');
 			char *pRecordBuf = (char *)malloc((pEnd - pBegin + 2) * sizeof(char));
-			memset(pRecordBuf, 0, pEnd - pBegin + 2); //clw add  clw note£º20190604£ºÕâ¾äÎñ±ØÒªĞ´£¬·ñÔòºóÃæ¶¼ÊÇÔàÊı¾İ£¡£¡¶øÇÒÒª±£Ö¤ÒÔ'\0'½áÎ²£¬ËùÒÔ¶îÍâ·ÖÅäÁËÒ»¸ö×Ö½Ú£¬¼´pEnd- pBegin +1Õâ¸öÖµ¼Ó1
-			strncpy(pRecordBuf, pBegin, pEnd - pBegin + 1);  //clw note£ºpRecordBuf[pEnd - pBegin]¶ÔÓ¦'\n'
+			memset(pRecordBuf, 0, pEnd - pBegin + 2); //clw add  clw noteï¼š20190604ï¼šè¿™å¥åŠ¡å¿…è¦å†™ï¼Œå¦åˆ™åé¢éƒ½æ˜¯è„æ•°æ®ï¼ï¼è€Œä¸”è¦ä¿è¯ä»¥'\0'ç»“å°¾ï¼Œæ‰€ä»¥é¢å¤–åˆ†é…äº†ä¸€ä¸ªå­—èŠ‚ï¼Œå³pEnd- pBegin +1è¿™ä¸ªå€¼åŠ 1
+			strncpy(pRecordBuf, pBegin, pEnd - pBegin + 1);  //clw noteï¼špRecordBuf[pEnd - pBegin]å¯¹åº”'\n'
 			if(g_IsDebug)
 			{
-				//WriteDailyLog(true, "clw£º´òÓ¡TXTÎÄ¼şÃ¿Ò»ĞĞµÄÄÚÈİ%s\n", pRecordBuf);//×Ô×¢£ºÕâÀïÓĞ¿ÉÄÜÒòÎª·Å²»ÏÂ£¬ÒıÆğ±¨´í
-				printf("clw£º´òÓ¡TXTÎÄ¼şÃ¿Ò»ĞĞµÄÄÚÈİ%s\n", pRecordBuf);
+				//WriteDailyLog(true, "clwï¼šæ‰“å°TXTæ–‡ä»¶æ¯ä¸€è¡Œçš„å†…å®¹%s\n", pRecordBuf);//è‡ªæ³¨ï¼šè¿™é‡Œæœ‰å¯èƒ½å› ä¸ºæ”¾ä¸ä¸‹ï¼Œå¼•èµ·æŠ¥é”™
+				printf("clwï¼šæ‰“å°TXTæ–‡ä»¶æ¯ä¸€è¡Œçš„å†…å®¹%s\n", pRecordBuf);
 			}
 			pEnd = strchr(pRecordBuf, '\n');
 
-			//ÌáÈ¡¸ÃĞĞ¸ººÉÓĞ¹¦Ô¤²âÖµ£¬96µã
-			//Á½¸ö¸¨ÖúÖ¸Õë±äÁ¿ÍÚ×Ö·û´®
+			//æå–è¯¥è¡Œè´Ÿè·æœ‰åŠŸé¢„æµ‹å€¼ï¼Œ96ç‚¹
+			//ä¸¤ä¸ªè¾…åŠ©æŒ‡é’ˆå˜é‡æŒ–å­—ç¬¦ä¸²
 			char *pCur = pRecordBuf;
 			char *pPre = pCur;
 
 			//==========================old method==========================
 			//int nPointNums;
-			//if(fileType == "AGCRN") //Èç¹ûÊÇAGCÈÕÄÚ¼Æ»®£¬È¡48µã
+			//if(fileType == "AGCRN") //å¦‚æœæ˜¯AGCæ—¥å†…è®¡åˆ’ï¼Œå–48ç‚¹
 			//{
 			//	nPointNums = 48;
 			//}
@@ -603,29 +585,29 @@ bool FileParser::ParseESFile(const char filepath[])
 			int nPointNums = atoi(m_vecFilesInfo[m_vecFilesInfoIndex[0]].m_map_nameInfo["pointnums"].c_str());  //clw modify 20190620
 
 
-			//¿ªÊ¼È¡48µã»ò96µãÊı¾İ
+			//å¼€å§‹å–48ç‚¹æˆ–96ç‚¹æ•°æ®
 			int count = 0;
 			while(1) 
 			{
-				//clw add 20190604:¶Áµ½96µãÊı¾İ»ò48µãÊı¾İ¾Í·µ»Ø£¬ÒòÎªÓĞĞ©ĞĞ96µã×îºó²¢²»Ò»¶¨ÊÇ\n£¬»¹ÓĞ¿ÉÄÜÊÇÂÒÂë£¬ÈİÒ×Îó¶Á¡£±ÈÈç
-				/*±±¾©.Ê¯¾°É½µç³§/220kV.0¼×#Æô±¸±ä-¸ßµÈÖµ¸ººÉ	0.3935  0	0.3935  0	0.3935  0	0.3935  0	
+				//clw add 20190604:è¯»åˆ°96ç‚¹æ•°æ®æˆ–48ç‚¹æ•°æ®å°±è¿”å›ï¼Œå› ä¸ºæœ‰äº›è¡Œ96ç‚¹æœ€åå¹¶ä¸ä¸€å®šæ˜¯\nï¼Œè¿˜æœ‰å¯èƒ½æ˜¯ä¹±ç ï¼Œå®¹æ˜“è¯¯è¯»ã€‚æ¯”å¦‚
+				/*åŒ—äº¬.çŸ³æ™¯å±±ç”µå‚/220kV.0ç”²#å¯å¤‡å˜-é«˜ç­‰å€¼è´Ÿè·	0.3935  0	0.3935  0	0.3935  0	0.3935  0	
 				0.3871  0	0.3808  0	0.3808  0	0.4217  0	0.4465  0	0.4636  0	0.4399  0	0.4001  0 .....
 				0	q*/
 				if(m_vecShortP.size() == nPointNums)
 					break;
 
-				//×¢Òâ£ºÓ¦¸ÃÊÇ°Ñ¿Õ¸ñ£¬Tab¶¼strchrÕÒÒ»±é£¬ÄÄ¸öÅÅÔÚÇ°Ãæ£¬¾ÍÏÈ´¦ÀíÄÄ¸ö
-				//µ«ÊÇ»¹ÓĞ2¸ö¿Õ¸ñµÄÇé¿ö£¬»¹ĞèÒª¿¼ÂÇ
-				//Ìø¹ıµÚÒ»¸ö¿Õ°×
+				//æ³¨æ„ï¼šåº”è¯¥æ˜¯æŠŠç©ºæ ¼ï¼ŒTabéƒ½strchræ‰¾ä¸€éï¼Œå“ªä¸ªæ’åœ¨å‰é¢ï¼Œå°±å…ˆå¤„ç†å“ªä¸ª
+				//ä½†æ˜¯è¿˜æœ‰2ä¸ªç©ºæ ¼çš„æƒ…å†µï¼Œè¿˜éœ€è¦è€ƒè™‘
+				//è·³è¿‡ç¬¬ä¸€ä¸ªç©ºç™½
 				char* pSpace = strchr(pCur, ' ');
 				char* pTab = strchr(pCur, '\t');
 
-				if(pSpace > pEnd || pTab > pEnd)  //ËµÃ÷ÒÑ¾­ÌáÈ¡Íê±Ï£¬Ìø³ö
+				if(pSpace > pEnd || pTab > pEnd)  //è¯´æ˜å·²ç»æå–å®Œæ¯•ï¼Œè·³å‡º
 					break; 
 
-				if(pSpace == NULL && pTab == NULL)  //ÒÑ¾­ÕÒ²»µ½¿Õ°×£¬ÔòÌø³ö
+				if(pSpace == NULL && pTab == NULL)  //å·²ç»æ‰¾ä¸åˆ°ç©ºç™½ï¼Œåˆ™è·³å‡º
 				{
-					if(count == nPointNums - 1) //×îºóÒ»¸öÖµ¿ÉÄÜÃ»ÓĞ¿Õ¸ñ£¬Òò´ËÒªÌØÊâ´¦Àí£¬ÕÒ'\n'  ÔÚ³öÏÖ95µã»ò47µãµÄÊ±ºò
+					if(count == nPointNums - 1) //æœ€åä¸€ä¸ªå€¼å¯èƒ½æ²¡æœ‰ç©ºæ ¼ï¼Œå› æ­¤è¦ç‰¹æ®Šå¤„ç†ï¼Œæ‰¾'\n'  åœ¨å‡ºç°95ç‚¹æˆ–47ç‚¹çš„æ—¶å€™
 					{
 						pCur = strchr(pCur, '\n');
 					}
@@ -634,28 +616,28 @@ bool FileParser::ParseESFile(const char filepath[])
 						break;
 					}
 				}
-				else if((pSpace == NULL && pTab != NULL) || (pSpace != NULL && pTab == NULL)) //Èç¹ûÒ»¸ö·Ç¿ÕÒ»¸öÎª¿Õ£¬È¡·Ç¿ÕµÄÄÇ¸ö
+				else if((pSpace == NULL && pTab != NULL) || (pSpace != NULL && pTab == NULL)) //å¦‚æœä¸€ä¸ªéç©ºä¸€ä¸ªä¸ºç©ºï¼Œå–éç©ºçš„é‚£ä¸ª
 					pCur = max(pSpace, pTab);
-				else //¶¼²»Îª¿Õ£¬È¡×îĞ¡
+				else //éƒ½ä¸ä¸ºç©ºï¼Œå–æœ€å°
 					pCur = min(pSpace, pTab);
 
 
-				//Èç¹ûpPreºÍpCurÖĞ¼ä¼Ğ×ÅµÄÊÇÊı×Ö£¬¾Í°ÑpPreºÍpCurÖĞ¼äµÄÊı×ÖÈ¡³öÀ´£¬count+1£¬È»ºó¼ÌĞøÍùÏÂÕÒ
-				//ÏÂÃæ²»ÒªÓÃisdigit(*(pPre + 1))£¬ÒòÎªÈç¹ûÊÇÖĞÎÄ£¬ÓĞ¿ÉÄÜa=-79£¬ÕâÑùÓÃisdigit»áå´µô
+				//å¦‚æœpPreå’ŒpCurä¸­é—´å¤¹ç€çš„æ˜¯æ•°å­—ï¼Œå°±æŠŠpPreå’ŒpCurä¸­é—´çš„æ•°å­—å–å‡ºæ¥ï¼Œcount+1ï¼Œç„¶åç»§ç»­å¾€ä¸‹æ‰¾
+				//ä¸‹é¢ä¸è¦ç”¨isdigit(*(pPre + 1))ï¼Œå› ä¸ºå¦‚æœæ˜¯ä¸­æ–‡ï¼Œæœ‰å¯èƒ½a=-79ï¼Œè¿™æ ·ç”¨isdigitä¼šå®•æ‰
 				//if((*(pPre + 1) >= DIGIT_ASCII_MIN && *(pPre + 1) <= DIGIT_ASCII_MAX || *(pPre + 1) == '-')  ||
-				//	 (*(pCur - 1) >= DIGIT_ASCII_MIN && *(pCur - 1) <= DIGIT_ASCII_MAX) )  //TODO£ºÔİÊ±°ÑÊ×Î²Ö¸ÕëÇ°ºó¶¼ÊÇÊı×ÖµÄ¾Íµ±×öÊıÖµÁË£¬»¹²»Íê±¸¡£¡£
+				//	 (*(pCur - 1) >= DIGIT_ASCII_MIN && *(pCur - 1) <= DIGIT_ASCII_MAX) )  //TODOï¼šæš‚æ—¶æŠŠé¦–å°¾æŒ‡é’ˆå‰åéƒ½æ˜¯æ•°å­—çš„å°±å½“åšæ•°å€¼äº†ï¼Œè¿˜ä¸å®Œå¤‡ã€‚ã€‚
 				
 				if(IsNumber(pPre + 1, pCur - 1))
 				{
-					//TODO£ºÄ¿Ç°À´¿´£¬Ö»ÓĞÈÕÇ°AGC¼Æ»®µÄ±í°üº¬ÎŞ¹¦Êı¾İ£¬ĞèÒªÌø¹ı£¬Ö»È¡ÓĞ¹¦96µã
+					//TODOï¼šç›®å‰æ¥çœ‹ï¼Œåªæœ‰æ—¥å‰AGCè®¡åˆ’çš„è¡¨åŒ…å«æ— åŠŸæ•°æ®ï¼Œéœ€è¦è·³è¿‡ï¼Œåªå–æœ‰åŠŸ96ç‚¹
 					if(strcmp(fileType.c_str(), FILETYPE_AGCRQ) == 0) 
 					{
-						if(count % 2 == 0) //Ö»´¦Àícount=Å¼Êı£¬¼´ÓĞ¹¦¸ººÉÊı¾İ£¬Ìø¹ıÎŞ¹¦¸ººÉÔ¤²âÊı¾İ
+						if(count % 2 == 0) //åªå¤„ç†count=å¶æ•°ï¼Œå³æœ‰åŠŸè´Ÿè·æ•°æ®ï¼Œè·³è¿‡æ— åŠŸè´Ÿè·é¢„æµ‹æ•°æ®
 						{
 							char buf[16] = {0};
-							strncpy(buf, pPre + 1, pCur - pPre - 1); //clw note£º×¢ÒâÕâÀïµÄ+1ºÍ-1
+							strncpy(buf, pPre + 1, pCur - pPre - 1); //clw noteï¼šæ³¨æ„è¿™é‡Œçš„+1å’Œ-1
 							float P = atof(buf);
-							//printf("clw£ºatof×ª»¯³öÀ´P = %f\n", P);  //Ğ¡Êıµãºó±£Áô6Î»
+							//printf("clwï¼šatofè½¬åŒ–å‡ºæ¥P = %f\n", P);  //å°æ•°ç‚¹åä¿ç•™6ä½
 							m_vecShortP.push_back(P);	
 						}
 					}
@@ -669,20 +651,20 @@ bool FileParser::ParseESFile(const char filepath[])
 					}
 
 					pPre = pCur;
-					pCur++; //ÕâÑù²ÅÄÜÕÒµ½ÏÂÒ»¸ö¿Õ¸ñ£¬·ñÔòËÀÑ­»·ÔÚµ±Ç°¿Õ¸ñ¡£¡£
+					pCur++; //è¿™æ ·æ‰èƒ½æ‰¾åˆ°ä¸‹ä¸€ä¸ªç©ºæ ¼ï¼Œå¦åˆ™æ­»å¾ªç¯åœ¨å½“å‰ç©ºæ ¼ã€‚ã€‚
 					count++;
 					continue;
 				}
 				pPre = pCur;
-				pCur++; //ÕâÑù²ÅÄÜÕÒµ½ÏÂÒ»¸ö¿Õ¸ñ£¬·ñÔòËÀÑ­»·ÔÚµ±Ç°¿Õ¸ñ¡£¡£
+				pCur++; //è¿™æ ·æ‰èƒ½æ‰¾åˆ°ä¸‹ä¸€ä¸ªç©ºæ ¼ï¼Œå¦åˆ™æ­»å¾ªç¯åœ¨å½“å‰ç©ºæ ¼ã€‚ã€‚
 			} //while(1) end
 
 
-			//clw note£º¶ÁÈ¡48/96µã½áÊø£¬ÅĞ¶ÏvecÊÇ·ñ¶Áµ½ÁË96¸öÖµ»ò48¸öÖµ
+			//clw noteï¼šè¯»å–48/96ç‚¹ç»“æŸï¼Œåˆ¤æ–­vecæ˜¯å¦è¯»åˆ°äº†96ä¸ªå€¼æˆ–48ä¸ªå€¼
 			if(m_vecShortP.size() != nPointNums)
 			{
-				printf("clw£ºÌáÈ¡TXTÎÄ¼şÊÇ%dµã£¬²»ÊÇ%dµã£¬Çë¼ì²éÊı¾İ£¡\n", m_vecShortP.size(), nPointNums);
-				WriteDailyLog(true, "clw£ºÌáÈ¡TXTÎÄ¼şÊÇ%dµã£¬²»ÊÇ%dµã£¬Çë¼ì²éÊı¾İ£¡\n", m_vecShortP.size(), nPointNums);
+				printf("clwï¼šæå–TXTæ–‡ä»¶æ˜¯%dç‚¹ï¼Œä¸æ˜¯%dç‚¹ï¼Œè¯·æ£€æŸ¥æ•°æ®ï¼\n", m_vecShortP.size(), nPointNums);
+				WriteDailyLog(true, "clwï¼šæå–TXTæ–‡ä»¶æ˜¯%dç‚¹ï¼Œä¸æ˜¯%dç‚¹ï¼Œè¯·æ£€æŸ¥æ•°æ®ï¼\n", m_vecShortP.size(), nPointNums);
 				int len = m_vecShortP.size();
 				for(int i=0; i<len; ++i)
 				{
@@ -692,7 +674,7 @@ bool FileParser::ParseESFile(const char filepath[])
 				printf("\n");
 				char buf[BUF_LEN_MIN];
 				sprintf(buf, "%d", m_vecShortP.size());
-				string strLogInfo = "clw£ºÌáÈ¡TXTÎÄ¼şÊÇ" + string(buf) + "µã£¬²»ÊÇ96µã£¬Çë¼ì²éÊı¾İ£¡";
+				string strLogInfo = "clwï¼šæå–TXTæ–‡ä»¶æ˜¯" + string(buf) + "ç‚¹ï¼Œä¸æ˜¯96ç‚¹ï¼Œè¯·æ£€æŸ¥æ•°æ®ï¼";
 				WriteDailyLog(true, strLogInfo.c_str());
 				free(pRecordBuf); 
 				return false;
@@ -701,7 +683,7 @@ bool FileParser::ParseESFile(const char filepath[])
 			m_vecStationShortPs.push_back(m_vecShortP);
 			vector<float>().swap(m_vecShortP);
 
-			//ÊÍ·ÅÎªÃ¿Ìõ¼ÇÂ¼·ÖÅäµÄÄÚ´æ
+			//é‡Šæ”¾ä¸ºæ¯æ¡è®°å½•åˆ†é…çš„å†…å­˜
 			if(pRecordBuf!=NULL)
 			{
 				free(pRecordBuf);
@@ -710,20 +692,20 @@ bool FileParser::ParseESFile(const char filepath[])
 		} //for end
 	}
 
-	//ÊÍ·ÅÕû¸öÎÄ¼ş¶ÔÓ¦µÄstrµÄÄÚ´æ
+	//é‡Šæ”¾æ•´ä¸ªæ–‡ä»¶å¯¹åº”çš„strçš„å†…å­˜
 	if(pTxtBuf != NULL)
 	{
 		free(pTxtBuf);
 		pTxtBuf = NULL;
 	}
 
-	//¹Ø±ÕÎÄ¼ş
+	//å…³é—­æ–‡ä»¶
 	fclose(fp);
 
 	if(g_IsDebug)
 	{
-		printf("clw£ºÓĞ¹¦Ô¤²âÊı¾İTXTÎÄ¼şÌáÈ¡Íê±Ï£¬×¼±¸Ğ´mysql±í£¡£¡\n");
-		WriteDailyLog(true, "clw£ºÓĞ¹¦Ô¤²âÊı¾İTXTÎÄ¼şÌáÈ¡Íê±Ï£¬×¼±¸Ğ´mysql±í£¡£¡\n");
+		printf("clwï¼šæœ‰åŠŸé¢„æµ‹æ•°æ®TXTæ–‡ä»¶æå–å®Œæ¯•ï¼Œå‡†å¤‡å†™mysqlè¡¨ï¼ï¼\n");
+		WriteDailyLog(true, "clwï¼šæœ‰åŠŸé¢„æµ‹æ•°æ®TXTæ–‡ä»¶æå–å®Œæ¯•ï¼Œå‡†å¤‡å†™mysqlè¡¨ï¼ï¼\n");
 	}
 	return true;
 }
@@ -745,58 +727,58 @@ bool FileParser::IsDigitStr(QString qStr)
 bool FileParser::GetTxtPositionByIni(int nRecordID, char *pTxtBuf, char **pBegin)
 {
 	//==================================================================================
-	//Ö÷Òª¹¦ÄÜ£ºÕÒµ½nRecordId¶ÔÓ¦µÄĞĞ
-	//²»Í¬TXTÎÄ¼ş¸ñÊ½²»Í¬£¬ÓĞ1¸ö¿Õ¸ñ»ò2¸ö¿Õ¸ñ»òTab¡£¡£µ«ÊÇ¶¼ÔÚµÚ3ĞĞµÄÎ»ÖÃÓĞÒ»¸öÄ£°å£¬
-	//ÒÔ@¿ªÍ·£¬¼ÇÂ¼ÁËÎÄ¼ş¸ñÊ½£¬Èç@ id name  p0015 q0015 p0030 q0030 p0045 q0045 p0100 
-	//ÕâÀïÓ²±àÂëÀ´´¦Àí¹Ì¶¨Ä³ÖÖ¸ñÊ½µÄTXTÎÄ¼ş
-	//¿Õ°×Ö÷ÔİÊ±Ö÷Òª°üÀ¨ÓĞ1¸ö¿Õ¸ñ»ò2¸ö¿Õ¸ñ»òTab£¬Ã²ËÆÃ»ÓĞÈ«½Ç¿Õ¸ñµÄ¸ÅÄî£»
-	//Ö»ÓĞÈ«½Ç¶ººÅ£¬ºÍÖĞÎÄ×ÖÀàËÆ£¬Õ¼Á½¸ö×Ö·û£¬ÒªÓÃwchar_t
-	//Ò²Ïë¹ıÍ¨¹ıÍ³¼Æ#ºÅµÄÊıÁ¿À´È·¶¨ÊÇµÚ¼¸Ìõ¼ÇÂ¼£¬µ«ÊÇ²»ĞĞ£¬±ÈÈç¾ÆÏÉÇÅ/220kV.4#Ö÷±ä-¸ß¡£¡£
-	//»òÕßÒ²¿ÉÒÔÍ³¼Æ#£¬È»ºóÅÅ³ı#Ç°Ãæ²»ÊÇ»»ĞĞ·ûµÄ¡£¡£¡£
+	//ä¸»è¦åŠŸèƒ½ï¼šæ‰¾åˆ°nRecordIdå¯¹åº”çš„è¡Œ
+	//ä¸åŒTXTæ–‡ä»¶æ ¼å¼ä¸åŒï¼Œæœ‰1ä¸ªç©ºæ ¼æˆ–2ä¸ªç©ºæ ¼æˆ–Tabã€‚ã€‚ä½†æ˜¯éƒ½åœ¨ç¬¬3è¡Œçš„ä½ç½®æœ‰ä¸€ä¸ªæ¨¡æ¿ï¼Œ
+	//ä»¥@å¼€å¤´ï¼Œè®°å½•äº†æ–‡ä»¶æ ¼å¼ï¼Œå¦‚@ id name  p0015 q0015 p0030 q0030 p0045 q0045 p0100 
+	//è¿™é‡Œç¡¬ç¼–ç æ¥å¤„ç†å›ºå®šæŸç§æ ¼å¼çš„TXTæ–‡ä»¶
+	//ç©ºç™½ä¸»æš‚æ—¶ä¸»è¦åŒ…æ‹¬æœ‰1ä¸ªç©ºæ ¼æˆ–2ä¸ªç©ºæ ¼æˆ–Tabï¼Œè²Œä¼¼æ²¡æœ‰å…¨è§’ç©ºæ ¼çš„æ¦‚å¿µï¼›
+	//åªæœ‰å…¨è§’é€—å·ï¼Œå’Œä¸­æ–‡å­—ç±»ä¼¼ï¼Œå ä¸¤ä¸ªå­—ç¬¦ï¼Œè¦ç”¨wchar_t
+	//ä¹Ÿæƒ³è¿‡é€šè¿‡ç»Ÿè®¡#å·çš„æ•°é‡æ¥ç¡®å®šæ˜¯ç¬¬å‡ æ¡è®°å½•ï¼Œä½†æ˜¯ä¸è¡Œï¼Œæ¯”å¦‚é…’ä»™æ¡¥/220kV.4#ä¸»å˜-é«˜ã€‚ã€‚
+	//æˆ–è€…ä¹Ÿå¯ä»¥ç»Ÿè®¡#ï¼Œç„¶åæ’é™¤#å‰é¢ä¸æ˜¯æ¢è¡Œç¬¦çš„ã€‚ã€‚ã€‚
 	//==================================================================================
 
-	//·½·¨Ò»£ºÕÒµ½@
-	//ÂÔ
+	//æ–¹æ³•ä¸€ï¼šæ‰¾åˆ°@
+	//ç•¥
 
-	//·½·¨¶ş£º#ÊıÁ¿Í³¼Æ·¨£¨Ö»Í³¼ÆÎ»ÓÚµÚ1ÁĞµÄ#ÊıÁ¿)
-	//char* pWellSign = pTxtBuf;  //¶¨Î»ÔÚÎÄÕÂ¿ªÊ¼
+	//æ–¹æ³•äºŒï¼š#æ•°é‡ç»Ÿè®¡æ³•ï¼ˆåªç»Ÿè®¡ä½äºç¬¬1åˆ—çš„#æ•°é‡)
+	//char* pWellSign = pTxtBuf;  //å®šä½åœ¨æ–‡ç« å¼€å§‹
 	//printf("clw: nRecordID = %d\n", nRecordID);
 	//for(int i = 0; i < nRecordID; ++i)
 	//{
 	//	pWellSign = strstr(pWellSign + 1, "#");
-	//	//printf("clw£º*(pWellSign+1) = %d\n", *(pWellSign+1));
-	//	//printf("clw£º*(pWellSign-1) = %d\n", *(pWellSign-1));
-	//	if(pWellSign == NULL) //±ÈÈçÒªÕÒµÄÊÇ#3£¬Ò²¾ÍÊÇµÚ3Ìõ¼ÇÂ¼£¬µ«ÊÇÊµ¼ÊtxtÖ»ÓĞ1Ìõ¼ÇÂ¼£¬#ºÅÃ»ÄÇÃ´¶à
+	//	//printf("clwï¼š*(pWellSign+1) = %d\n", *(pWellSign+1));
+	//	//printf("clwï¼š*(pWellSign-1) = %d\n", *(pWellSign-1));
+	//	if(pWellSign == NULL) //æ¯”å¦‚è¦æ‰¾çš„æ˜¯#3ï¼Œä¹Ÿå°±æ˜¯ç¬¬3æ¡è®°å½•ï¼Œä½†æ˜¯å®é™…txtåªæœ‰1æ¡è®°å½•ï¼Œ#å·æ²¡é‚£ä¹ˆå¤š
 	//	{
-	//		printf("clw£ºiniÎÄ¼şÖĞÅäÖÃµÄ¼ÇÂ¼id´óÓÚTXT¼ÇÂ¼×ÜÊı£¬ÇëĞŞ¸ÄiniÎÄ¼ş£¡\n");
+	//		printf("clwï¼šiniæ–‡ä»¶ä¸­é…ç½®çš„è®°å½•idå¤§äºTXTè®°å½•æ€»æ•°ï¼Œè¯·ä¿®æ”¹iniæ–‡ä»¶ï¼\n");
 	//		printf("\n");
-	//		WriteDailyLog(true, "clw£ºiniÎÄ¼şÖĞÅäÖÃµÄ¼ÇÂ¼id´óÓÚTXT¼ÇÂ¼×ÜÊı£¬ÇëĞŞ¸ÄiniÎÄ¼ş£¡\n");
+	//		WriteDailyLog(true, "clwï¼šiniæ–‡ä»¶ä¸­é…ç½®çš„è®°å½•idå¤§äºTXTè®°å½•æ€»æ•°ï¼Œè¯·ä¿®æ”¹iniæ–‡ä»¶ï¼\n");
 	//		free(pTxtBuf);
 	//		fclose(fp);
 	//		return false;
 	//	}
 
-	//	if(*(pWellSign-1) != '\n') //Î»ÓÚµÚ1ÁĞµÄ#µÄÌØÕ÷ÊÇ£¬Ç°Ò»¸ö×Ö·ûÊÇ'\n'£¬¼´ÉÏÒ»ĞĞ
+	//	if(*(pWellSign-1) != '\n') //ä½äºç¬¬1åˆ—çš„#çš„ç‰¹å¾æ˜¯ï¼Œå‰ä¸€ä¸ªå­—ç¬¦æ˜¯'\n'ï¼Œå³ä¸Šä¸€è¡Œ
 	//	{
 	//		i--;
 	//		continue;
 	//	}
 	//}
-	//ÅĞ¶Ï#ºóÃæ³öÏÖµÄµÚ1¸öÊı×ÖÊÇ·ñÊÇnRecordID£¬Èç¹û²»ÊÇ£¬ÔòÕÒ²»µ½id
+	//åˆ¤æ–­#åé¢å‡ºç°çš„ç¬¬1ä¸ªæ•°å­—æ˜¯å¦æ˜¯nRecordIDï¼Œå¦‚æœä¸æ˜¯ï¼Œåˆ™æ‰¾ä¸åˆ°id
 	//char* pBegin = pWellSign;
 	//pBegin++;
-	//while(/*!isdigit(*pBegin)*/ *pBegin < DIGIT_ASCII_MIN || *pBegin > DIGIT_ASCII_MAX) //·ÇÊı×Ö
+	//while(/*!isdigit(*pBegin)*/ *pBegin < DIGIT_ASCII_MIN || *pBegin > DIGIT_ASCII_MAX) //éæ•°å­—
 	//{
 	//	if(*pBegin != ' ' && *pBegin != '\t')
 	//	{
 	//		//error2
-	//		//printf("clw£º*pBegin = %d\n", *pBegin);
-	//		printf("clw£ºTXTµÄ#id¸ñÊ½²»ÕıÈ·£¬Çë¼ì²é¸ñÊ½£¡\n");
+	//		//printf("clwï¼š*pBegin = %d\n", *pBegin);
+	//		printf("clwï¼šTXTçš„#idæ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·æ£€æŸ¥æ ¼å¼ï¼\n");
 	//		printf("\n");
-	//		//printf("clw£º*pBegin = %d\n", *pBegin);
-	//		//printf("clw£º*(pBegin+1) = %d\n", *(pBegin+1));
-	//		//printf("clw£º*(pBegin-1) = %d\n", *(pBegin - 1));
-	//		WriteDailyLog(true, "clw£ºTXTµÄ#id¸ñÊ½²»ÕıÈ·£¬Çë¼ì²é¸ñÊ½£¡\n");
+	//		//printf("clwï¼š*pBegin = %d\n", *pBegin);
+	//		//printf("clwï¼š*(pBegin+1) = %d\n", *(pBegin+1));
+	//		//printf("clwï¼š*(pBegin-1) = %d\n", *(pBegin - 1));
+	//		WriteDailyLog(true, "clwï¼šTXTçš„#idæ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·æ£€æŸ¥æ ¼å¼ï¼\n");
 	//		free(pTxtBuf);
 	//		fclose(fp);
 	//		return false;
@@ -805,8 +787,8 @@ bool FileParser::GetTxtPositionByIni(int nRecordID, char *pTxtBuf, char **pBegin
 	//}
 
 
-	//·½·¨Èı£ºÖ±½ÓÕÒ#3»ò# 3»ò#  3
-	char* pWellSign = pTxtBuf;  //¶¨Î»ÔÚÎÄÕÂ¿ªÊ¼
+	//æ–¹æ³•ä¸‰ï¼šç›´æ¥æ‰¾#3æˆ–# 3æˆ–#  3
+	char* pWellSign = pTxtBuf;  //å®šä½åœ¨æ–‡ç« å¼€å§‹
 	if(g_IsDebug)
 	{
 		printf("clw: nRecordID = %d\n", nRecordID);
@@ -824,8 +806,8 @@ bool FileParser::GetTxtPositionByIni(int nRecordID, char *pTxtBuf, char **pBegin
 				sprintf(buf, "#  %d", nRecordID);
 				if(strstr(pWellSign, buf) == NULL)
 				{
-					printf("clw£ºtxtÎÄ¼şÖĞÃ»ÓĞ#id¶ÔÓ¦µÄ¼ÇÂ¼£¬Çë¼ì²éÏàÓ¦µÄtxtºÍiniÎÄ¼ş£¡\n");
-					WriteDailyLog(true, "clw£ºtxtÎÄ¼şÖĞÃ»ÓĞ#id¶ÔÓ¦µÄ¼ÇÂ¼£¬Çë¼ì²éÏàÓ¦µÄtxtºÍiniÎÄ¼ş£¡\n");
+					printf("clwï¼štxtæ–‡ä»¶ä¸­æ²¡æœ‰#idå¯¹åº”çš„è®°å½•ï¼Œè¯·æ£€æŸ¥ç›¸åº”çš„txtå’Œiniæ–‡ä»¶ï¼\n");
+					WriteDailyLog(true, "clwï¼štxtæ–‡ä»¶ä¸­æ²¡æœ‰#idå¯¹åº”çš„è®°å½•ï¼Œè¯·æ£€æŸ¥ç›¸åº”çš„txtå’Œiniæ–‡ä»¶ï¼\n");
 					return false;
 				}
 				else
@@ -838,7 +820,7 @@ bool FileParser::GetTxtPositionByIni(int nRecordID, char *pTxtBuf, char **pBegin
 			pWellSign = strstr(pWellSign, buf);
 
 
-		if(*(pWellSign-1) != '\n') //Î»ÓÚµÚ1ÁĞµÄ#µÄÌØÕ÷ÊÇ£¬Ç°Ò»¸ö×Ö·ûÊÇ'\n'£¬¼´ÉÏÒ»ĞĞ
+		if(*(pWellSign-1) != '\n') //ä½äºç¬¬1åˆ—çš„#çš„ç‰¹å¾æ˜¯ï¼Œå‰ä¸€ä¸ªå­—ç¬¦æ˜¯'\n'ï¼Œå³ä¸Šä¸€è¡Œ
 		{
 			pWellSign++;
 		}
@@ -848,36 +830,36 @@ bool FileParser::GetTxtPositionByIni(int nRecordID, char *pTxtBuf, char **pBegin
 		}
 	}
 
-	//»ñÈ¡txtÖĞµÄnRecordID
+	//è·å–txtä¸­çš„nRecordID
 	char* pTmp = pWellSign;
 	pTmp++;
-	while(/*!isdigit(*pBegin)*/ *pTmp < DIGIT_ASCII_MIN || *pTmp > DIGIT_ASCII_MAX) //·ÇÊı×Ö
+	while(/*!isdigit(*pBegin)*/ *pTmp < DIGIT_ASCII_MIN || *pTmp > DIGIT_ASCII_MAX) //éæ•°å­—
 	{
 		if(*pTmp != ' ' && *pTmp != '\t')
 		{
 			//error2
-			//printf("clw£º*pBegin = %d\n", *pBegin);
-			printf("clw£ºTXTµÄ#id¸ñÊ½²»ÕıÈ·£¬#ºóÃæÖ»ÄÜÊÇ¿Õ¸ñ»òTab¸úÊı×Ö£¡\n");
-			//printf("clw£º*pBegin = %d\n", *pBegin);
-			//printf("clw£º*(pBegin+1) = %d\n", *(pBegin+1));
-			//printf("clw£º*(pBegin-1) = %d\n", *(pBegin - 1));
-			WriteDailyLog(true, "clw£ºTXTµÄ#id¸ñÊ½²»ÕıÈ·£¬#ºóÃæÖ»ÄÜÊÇ¿Õ¸ñ»òTab¸úÊı×Ö£¡\n");
+			//printf("clwï¼š*pBegin = %d\n", *pBegin);
+			printf("clwï¼šTXTçš„#idæ ¼å¼ä¸æ­£ç¡®ï¼Œ#åé¢åªèƒ½æ˜¯ç©ºæ ¼æˆ–Tabè·Ÿæ•°å­—ï¼\n");
+			//printf("clwï¼š*pBegin = %d\n", *pBegin);
+			//printf("clwï¼š*(pBegin+1) = %d\n", *(pBegin+1));
+			//printf("clwï¼š*(pBegin-1) = %d\n", *(pBegin - 1));
+			WriteDailyLog(true, "clwï¼šTXTçš„#idæ ¼å¼ä¸æ­£ç¡®ï¼Œ#åé¢åªèƒ½æ˜¯ç©ºæ ¼æˆ–Tabè·Ÿæ•°å­—ï¼\n");
 			return false;
 		}
 		pTmp++;
 	}
-	//¼ÆËã³ö¼ÇÂ¼µÄidÖµ£¬±ÈÈç#123£¬ÄÇÃ´num = ((0*10+1)*10+2)*10+3
+	//è®¡ç®—å‡ºè®°å½•çš„idå€¼ï¼Œæ¯”å¦‚#123ï¼Œé‚£ä¹ˆnum = ((0*10+1)*10+2)*10+3
 	int num = 0;
-	while(*pTmp >= DIGIT_ASCII_MIN && *pTmp <= DIGIT_ASCII_MAX) //ÊÇÊı×Ö
+	while(*pTmp >= DIGIT_ASCII_MIN && *pTmp <= DIGIT_ASCII_MAX) //æ˜¯æ•°å­—
 	{
 		num = num * 10 + *pTmp - '0';
 		pTmp++;
 	}
-	if(num != nRecordID) //ÅĞ¶ÏiniÖĞµÄ¼ÇÂ¼idºÍtxtÖĞÕÒµ½µÄ¼ÇÂ¼idÊÇ·ñÏàÍ¬
+	if(num != nRecordID) //åˆ¤æ–­iniä¸­çš„è®°å½•idå’Œtxtä¸­æ‰¾åˆ°çš„è®°å½•idæ˜¯å¦ç›¸åŒ
 	{
 		//error3
-		printf("clw£ºtxtÖĞµÄ¼ÇÂ¼idÖµÎªnum = %d£¬ÓëiniÖĞnRecordID = %d²»µÈ£¡\n", num, nRecordID);
-		WriteDailyLog(true, "clw£ºtxtÖĞµÄ¼ÇÂ¼idÖµÎªnum = %d£¬ÓëiniÖĞnRecordID = %d²»µÈ£¡\n", num, nRecordID);
+		printf("clwï¼štxtä¸­çš„è®°å½•idå€¼ä¸ºnum = %dï¼Œä¸iniä¸­nRecordID = %dä¸ç­‰ï¼\n", num, nRecordID);
+		WriteDailyLog(true, "clwï¼štxtä¸­çš„è®°å½•idå€¼ä¸ºnum = %dï¼Œä¸iniä¸­nRecordID = %dä¸ç­‰ï¼\n", num, nRecordID);
 		return false;
 	}
 	*pBegin = pTmp;
@@ -886,7 +868,7 @@ bool FileParser::GetTxtPositionByIni(int nRecordID, char *pTxtBuf, char **pBegin
 	//==================================================================================
 }
 
-//TODO£ºÔİÊ±»¹Ã»ÅĞ¶ÏÊı×ÖºÏÀíĞÔ£¬±ÈÈç00.0£¬»òÕß011Ö®Àà
+//TODOï¼šæš‚æ—¶è¿˜æ²¡åˆ¤æ–­æ•°å­—åˆç†æ€§ï¼Œæ¯”å¦‚00.0ï¼Œæˆ–è€…011ä¹‹ç±»
 bool FileParser::IsNumber(char* start, char* end) 
 {
 	if(start == NULL || end == NULL || start > end)
@@ -907,19 +889,19 @@ bool FileParser::WriteFileInfoToDB()
 
 	if(m_strForcastTime.isEmpty())
 	{
-		printf("clw£º³¬¶ÌÆÚÎÄ¼şÆğÊ¼Ô¤²âÊ±¼ä»ñÈ¡Ê§°Ü£¬Çë¼ì²éÎÄ¼şÃûÏÂ»®Ïß¸ñÊ½£¡\n");
-		WriteDailyLog(true, "clw£º³¬¶ÌÆÚÎÄ¼şÆğÊ¼Ô¤²âÊ±¼ä»ñÈ¡Ê§°Ü£¬Çë¼ì²éÎÄ¼şÃûÏÂ»®Ïß¸ñÊ½£¡");
+		printf("clwï¼šè¶…çŸ­æœŸæ–‡ä»¶èµ·å§‹é¢„æµ‹æ—¶é—´è·å–å¤±è´¥ï¼Œè¯·æ£€æŸ¥æ–‡ä»¶åä¸‹åˆ’çº¿æ ¼å¼ï¼\n");
+		WriteDailyLog(true, "clwï¼šè¶…çŸ­æœŸæ–‡ä»¶èµ·å§‹é¢„æµ‹æ—¶é—´è·å–å¤±è´¥ï¼Œè¯·æ£€æŸ¥æ–‡ä»¶åä¸‹åˆ’çº¿æ ¼å¼ï¼");
 		return false;
 	}
 	if(m_vecStationShortPs.empty())
 	{
-		printf("clw£ºÎ´»ñÈ¡µ½96µãÊı¾İ£¬ÎŞ·¨Ğ´Êı¾İ¿â£¡\n");
-		WriteDailyLog(true, "clw£ºÎ´»ñÈ¡µ½96µãÊı¾İ£¬ÎŞ·¨Ğ´Êı¾İ¿â£¡\n");
+		printf("clwï¼šæœªè·å–åˆ°96ç‚¹æ•°æ®ï¼Œæ— æ³•å†™æ•°æ®åº“ï¼\n");
+		WriteDailyLog(true, "clwï¼šæœªè·å–åˆ°96ç‚¹æ•°æ®ï¼Œæ— æ³•å†™æ•°æ®åº“ï¼\n");
 		return false;
 	}
 
 	//==============================================================================================
-	//ÅúÁ¿²åÈëÊı¾İµ½mysql/´ïÃÎ
+	//æ‰¹é‡æ’å…¥æ•°æ®åˆ°mysql/è¾¾æ¢¦
 	//==============================================================================================
 	//QString strSqlHeader = "";
 	string fileType = "";
@@ -933,12 +915,12 @@ bool FileParser::WriteFileInfoToDB()
 	}
 	else
 	{
-		WriteDailyLog(true, "clw£ºÕÒ²»µ½¸ÃÎÄ¼şÀàĞÍ¶ÔÓ¦µÄË÷Òı£¡");//±ÈÈçÖ®Ç°ËµRNMXFHYCÓĞ¿ÉÄÜ¼È´ú±í³¬¶ÌÆÚ¸ººÉÔ¤²â£¬Ò²´ú±í³¬¶ÌÆÚ·¢µçÔ¤²â£¬ÕâÊ±ºò¾ÍÓĞÁ½¸öË÷Òı...
+		WriteDailyLog(true, "clwï¼šæ‰¾ä¸åˆ°è¯¥æ–‡ä»¶ç±»å‹å¯¹åº”çš„ç´¢å¼•ï¼");//æ¯”å¦‚ä¹‹å‰è¯´RNMXFHYCæœ‰å¯èƒ½æ—¢ä»£è¡¨è¶…çŸ­æœŸè´Ÿè·é¢„æµ‹ï¼Œä¹Ÿä»£è¡¨è¶…çŸ­æœŸå‘ç”µé¢„æµ‹ï¼Œè¿™æ—¶å€™å°±æœ‰ä¸¤ä¸ªç´¢å¼•...
 		return false;
 	}
 
-	//¸ù¾İ²»Í¬ÎÄ¼şÀàĞÍ£¬Éú³É¸÷×ÔµÄsqlÓï¾ä
-	char strSQL[65536]; //TODO£º×¢ÒâĞ¡ÁË´æ²»ÏÂ£¡×îÉÙµÃÓĞ£º96µã * 60Ã¿Ìõ³¤¶È * 4±ÈÈçplan»òstation1¡¢2¡¢3¡¢4ËÄÌõ¼ÇÂ¼
+	//æ ¹æ®ä¸åŒæ–‡ä»¶ç±»å‹ï¼Œç”Ÿæˆå„è‡ªçš„sqlè¯­å¥
+	char strSQL[65536]; //TODOï¼šæ³¨æ„å°äº†å­˜ä¸ä¸‹ï¼æœ€å°‘å¾—æœ‰ï¼š96ç‚¹ * 60æ¯æ¡é•¿åº¦ * 4æ¯”å¦‚planæˆ–station1ã€2ã€3ã€4å››æ¡è®°å½•
 	QStringList lstSql;
 	vector<string> vecForcastTime = GetForcastTimes(fileType, nTimeInterval, nPointNums);
 	if(fileType == FILETYPE_ULTRALOAD)
@@ -967,8 +949,8 @@ bool FileParser::WriteFileInfoToDB()
 	}
 	else
 	{
-		printf("clw£ºÃ»ÓĞ´ËÎÄ¼şÀàĞÍ£¡Ğ´MySQLÊ§°Ü£¡\n");
-		WriteDailyLog(true, "clw£ºÃ»ÓĞ´ËÎÄ¼şÀàĞÍ£¡Ğ´MySQLÊ§°Ü£¡\n");
+		printf("clwï¼šæ²¡æœ‰æ­¤æ–‡ä»¶ç±»å‹ï¼å†™MySQLå¤±è´¥ï¼\n");
+		WriteDailyLog(true, "clwï¼šæ²¡æœ‰æ­¤æ–‡ä»¶ç±»å‹ï¼å†™MySQLå¤±è´¥ï¼\n");
 		return false;
 	}
 	//==============================================================================================
@@ -982,12 +964,12 @@ bool FileParser::WriteUltraLoadFileToDB(int nPointNums, const vector<string>& ve
 	int len = m_vecFilesInfoIndex.size();
 	if(g_IsDebug)
 	{
-		printf("clw£ºÎÄ¼şÀàĞÍÎªÈÕÄÚÄ¸Ïß¸ººÉÔ¤²âRNMXFHYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
-		WriteDailyLog(true, "clw£ºÎÄ¼şÀàĞÍÎªÈÕÄÚÄ¸Ïß¸ººÉÔ¤²âRNMXFHYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
+		printf("clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å†…æ¯çº¿è´Ÿè·é¢„æµ‹RNMXFHYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
+		WriteDailyLog(true, "clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å†…æ¯çº¿è´Ÿè·é¢„æµ‹RNMXFHYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
 	}
 	if(len <= 0)
 	{
-		WriteDailyLog(true, "clw£ºÕÒ²»µ½ÅäÖÃÎÄ¼şĞÅÏ¢£¬Çë¼ì²é£¡");
+		WriteDailyLog(true, "clwï¼šæ‰¾ä¸åˆ°é…ç½®æ–‡ä»¶ä¿¡æ¯ï¼Œè¯·æ£€æŸ¥ï¼");
 		return false;
 	}
 
@@ -1001,26 +983,26 @@ bool FileParser::WriteUltraLoadFileToDB(int nPointNums, const vector<string>& ve
 
 		sqlToExec = "INSERT INTO " + QString::fromStdString(tableName) + "_" + QDateTime::currentDateTime().toString("yyyy") + "(ID, FORCASTTIME, SAVETIME, METHOD, FORCASTP) VALUES";
 
-		for(map<string, vector<string> >::iterator iter = m_vecFilesInfo[m_vecFilesInfoIndex[i]].m_map_nameVals.begin();  //Èç¹ûiniÖĞÍ¬Ò»¸ö±íÅäÁË¶àÌõ¼ÇÂ¼£¬Èç1,#1ºÍ2,#2
+		for(map<string, vector<string> >::iterator iter = m_vecFilesInfo[m_vecFilesInfoIndex[i]].m_map_nameVals.begin();  //å¦‚æœiniä¸­åŒä¸€ä¸ªè¡¨é…äº†å¤šæ¡è®°å½•ï¼Œå¦‚1,#1å’Œ2,#2
 			iter !=  m_vecFilesInfo[m_vecFilesInfoIndex[i]].m_map_nameVals.end(); ++iter)
 		{
 
 			string strID = iter->second[0];
 			int nCtrlID = atoi(strID.c_str());
-			for(int i = 0; i < nPointNums /*96£¬1²âÊÔÓÃ*/; ++i)
+			for(int i = 0; i < nPointNums /*96ï¼Œ1æµ‹è¯•ç”¨*/; ++i)
 			{
-				sprintf(strSQL, strFormat, nCtrlID , vecForcastTime[i].c_str(), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss").toLatin1().data(), 0/*method£¬ÔİÊ±Ğ´0*/, m_vecStationShortPs[index][i]);
+				sprintf(strSQL, strFormat, nCtrlID , vecForcastTime[i].c_str(), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss").toLatin1().data(), 0/*methodï¼Œæš‚æ—¶å†™0*/, m_vecStationShortPs[index][i]);
 				lstSql.append(strSQL);
 			}
 
 			if(count != 0)
-				sqlToExec += ",";  //µÚÒ»²¨Êı¾İÇ°Ãæ²»ÓÃ¼Ó¶ººÅ
+				sqlToExec += ",";  //ç¬¬ä¸€æ³¢æ•°æ®å‰é¢ä¸ç”¨åŠ é€—å·
 			count++;
 			index++;
 			sqlToExec += lstSql.join(",");
 			lstSql.clear();
 		}
-		//Ö´ĞĞsql
+		//æ‰§è¡Œsql
 		if(!ExecSQL(sqlToExec))
 			return false;
 		count = 0;
@@ -1035,12 +1017,12 @@ bool FileParser::WriteShortLoadFileToDB(int nPointNums, const vector<string>& ve
 	int len = m_vecFilesInfoIndex.size();
 	if(g_IsDebug)
 	{
-		printf("clw£ºÎÄ¼şÀàĞÍÎªÈÕÇ°Ä¸Ïß¸ººÉÔ¤²âRQMXFHYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
-		WriteDailyLog(true, "clw£ºÎÄ¼şÀàĞÍÎªÈÕÇ°Ä¸Ïß¸ººÉÔ¤²âRQMXFHYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
+		printf("clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å‰æ¯çº¿è´Ÿè·é¢„æµ‹RQMXFHYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
+		WriteDailyLog(true, "clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å‰æ¯çº¿è´Ÿè·é¢„æµ‹RQMXFHYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
 	}
 	if(len <= 0)
 	{
-		WriteDailyLog(true, "clw£ºÕÒ²»µ½ÅäÖÃÎÄ¼şĞÅÏ¢£¬Çë¼ì²é£¡");
+		WriteDailyLog(true, "clwï¼šæ‰¾ä¸åˆ°é…ç½®æ–‡ä»¶ä¿¡æ¯ï¼Œè¯·æ£€æŸ¥ï¼");
 		return false;
 	}
 
@@ -1061,20 +1043,20 @@ bool FileParser::WriteShortLoadFileToDB(int nPointNums, const vector<string>& ve
 			string strID = iter->second[0];
 			int nID = atoi(strID.c_str());
 
-			for(int i = 0; i < nPointNums /*96£¬1²âÊÔÓÃ*/; ++i)
+			for(int i = 0; i < nPointNums /*96ï¼Œ1æµ‹è¯•ç”¨*/; ++i)
 			{
-				sprintf(strSQL, strFormat, nID , vecForcastTime[i].c_str(), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss").toLatin1().data(), 0/*method£¬ÔİÊ±Ğ´0*/, m_vecStationShortPs[index][i]);
+				sprintf(strSQL, strFormat, nID , vecForcastTime[i].c_str(), QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss").toLatin1().data(), 0/*methodï¼Œæš‚æ—¶å†™0*/, m_vecStationShortPs[index][i]);
 				lstSql.append(strSQL);
 			}
 
 			if(count != 0)
-				sqlToExec += ",";  //µÚÒ»²¨Êı¾İÇ°Ãæ²»ÓÃ¼Ó¶ººÅ
+				sqlToExec += ",";  //ç¬¬ä¸€æ³¢æ•°æ®å‰é¢ä¸ç”¨åŠ é€—å·
 			count++;
 			index++;
 			sqlToExec += lstSql.join(",");
 			lstSql.clear();
 		}
-		//Ö´ĞĞsql
+		//æ‰§è¡Œsql
 		if(!ExecSQL(sqlToExec))
 			return false;
 		count = 0;
@@ -1089,12 +1071,12 @@ bool FileParser::WriteUltraXNYFileToDB(int nPointNums, const vector<string>& vec
 	int len = m_vecFilesInfoIndex.size();
 	if(g_IsDebug)
 	{
-		printf("clw£ºÎÄ¼şÀàĞÍÎªÈÕÄÚ·çµç¹¦ÂÊÔ¤²âRNFDGLYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
-		WriteDailyLog(true, "clw£ºÎÄ¼şÀàĞÍÎªÈÕÄÚ·çµç¹¦ÂÊÔ¤²âRNFDGLYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
+		printf("clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å†…é£ç”µåŠŸç‡é¢„æµ‹RNFDGLYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
+		WriteDailyLog(true, "clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å†…é£ç”µåŠŸç‡é¢„æµ‹RNFDGLYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
 	}
 	if(len <= 0)
 	{
-		WriteDailyLog(true, "clw£ºÕÒ²»µ½ÅäÖÃÎÄ¼şĞÅÏ¢£¬Çë¼ì²é£¡");
+		WriteDailyLog(true, "clwï¼šæ‰¾ä¸åˆ°é…ç½®æ–‡ä»¶ä¿¡æ¯ï¼Œè¯·æ£€æŸ¥ï¼");
 		return false;
 	}
 
@@ -1119,13 +1101,13 @@ bool FileParser::WriteUltraXNYFileToDB(int nPointNums, const vector<string>& vec
 			}
 
 			if(count != 0)
-				sqlToExec += ",";  //µÚÒ»²¨Êı¾İÇ°Ãæ²»ÓÃ¼Ó¶ººÅ
+				sqlToExec += ",";  //ç¬¬ä¸€æ³¢æ•°æ®å‰é¢ä¸ç”¨åŠ é€—å·
 			count++;
 			index++;
 			sqlToExec += lstSql.join(",");
 			lstSql.clear();
 		}
-		//Ö´ĞĞsql
+		//æ‰§è¡Œsql
 		if(!ExecSQL(sqlToExec))
 			return false;
 		count = 0;
@@ -1139,8 +1121,8 @@ bool FileParser::WriteShortXNYFileToDB(int nPointNums, const vector<string>& vec
 	int len = m_vecFilesInfoIndex.size();
 	if(g_IsDebug)
 	{
-		printf("clw£ºÎÄ¼şÀàĞÍÎªÈÕÇ°·çµç¹¦ÂÊÔ¤²âRQFDGLYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
-		WriteDailyLog(true, "clw£ºÎÄ¼şÀàĞÍÎªÈÕÇ°·çµç¹¦ÂÊÔ¤²âRQFDGLYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
+		printf("clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å‰é£ç”µåŠŸç‡é¢„æµ‹RQFDGLYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
+		WriteDailyLog(true, "clwï¼šæ–‡ä»¶ç±»å‹ä¸ºæ—¥å‰é£ç”µåŠŸç‡é¢„æµ‹RQFDGLYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
 	}
 	int count = 0;
 	int index = 0;
@@ -1164,13 +1146,13 @@ bool FileParser::WriteShortXNYFileToDB(int nPointNums, const vector<string>& vec
 			}
 
 			if(count != 0)
-				sqlToExec += ",";  //µÚÒ»²¨Êı¾İÇ°Ãæ²»ÓÃ¼Ó¶ººÅ
+				sqlToExec += ",";  //ç¬¬ä¸€æ³¢æ•°æ®å‰é¢ä¸ç”¨åŠ é€—å·
 			count++;
 			index++;
 			sqlToExec += lstSql.join(",");
 			lstSql.clear();
 		}
-		//Ö´ĞĞsql
+		//æ‰§è¡Œsql
 		if(!ExecSQL(sqlToExec))
 			return false;
 		count = 0;
@@ -1185,8 +1167,8 @@ bool FileParser::WriteAGCRNFileToDB(int nPointNums, const vector<string>& vecFor
 	int len = m_vecFilesInfoIndex.size();
 	if(g_IsDebug)
 	{
-		printf("clw£ºÎÄ¼şÀàĞÍÎªAGCÈÕÄÚµ÷¶È¼Æ»®RNPLANYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
-		WriteDailyLog(true, "clw£ºÎÄ¼şÀàĞÍÎªAGCÈÕÄÚµ÷¶È¼Æ»®RNPLANYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
+		printf("clwï¼šæ–‡ä»¶ç±»å‹ä¸ºAGCæ—¥å†…è°ƒåº¦è®¡åˆ’RNPLANYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
+		WriteDailyLog(true, "clwï¼šæ–‡ä»¶ç±»å‹ä¸ºAGCæ—¥å†…è°ƒåº¦è®¡åˆ’RNPLANYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
 	}
 	int count = 0;
 	int index = 0;
@@ -1211,21 +1193,21 @@ bool FileParser::WriteAGCRNFileToDB(int nPointNums, const vector<string>& vecFor
 			}
 
 			if(count != 0)
-				sqlToExec += ",";  //µÚÒ»²¨Êı¾İÇ°Ãæ²»ÓÃ¼Ó¶ººÅ
+				sqlToExec += ",";  //ç¬¬ä¸€æ³¢æ•°æ®å‰é¢ä¸ç”¨åŠ é€—å·
 			count++;
 			index++;
 			sqlToExec += lstSql.join(",");
 			lstSql.clear();
 
-			//Ğ´ÊµÊ±¿â
+			//å†™å®æ—¶åº“
 #ifndef WINDOWS_DEBUG
-			bSuc2 = (bSuc2 && WriteRtdbAndConfigDB(fileType, strID)); //clw note£ºÖ»²âÊÔmysqlÊ±£¬Ğ´ÊµÊ±¿âÓÃtrue´úÌæ	
+			bSuc2 = (bSuc2 && WriteRtdbAndConfigDB(fileType, strID)); //clw noteï¼šåªæµ‹è¯•mysqlæ—¶ï¼Œå†™å®æ—¶åº“ç”¨trueä»£æ›¿	
 #else
 			bSuc2 = true;
 #endif
 		
 		}
-		//Ö´ĞĞsql
+		//æ‰§è¡Œsql
 		bool bSuc1 = ExecSQL(sqlToExec);
 		count = 0;
 
@@ -1242,8 +1224,8 @@ bool FileParser::WriteAGCRQFileToDB(int nPointNums, const vector<string>& vecFor
 	int len = m_vecFilesInfoIndex.size();
 	if(g_IsDebug)
 	{
-		printf("clw£ºÎÄ¼şÀàĞÍÎªAGCÈÕÇ°µ÷¶È¼Æ»®DQPLANYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
-		WriteDailyLog(true, "clw£ºÎÄ¼şÀàĞÍÎªAGCÈÕÇ°µ÷¶È¼Æ»®DQPLANYC£¬¸ÃÀàĞÍ¶ÔÓ¦µÄtable¸öÊı = %d\n", len);
+		printf("clwï¼šæ–‡ä»¶ç±»å‹ä¸ºAGCæ—¥å‰è°ƒåº¦è®¡åˆ’DQPLANYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
+		WriteDailyLog(true, "clwï¼šæ–‡ä»¶ç±»å‹ä¸ºAGCæ—¥å‰è°ƒåº¦è®¡åˆ’DQPLANYCï¼Œè¯¥ç±»å‹å¯¹åº”çš„tableä¸ªæ•° = %d\n", len);
 	}
 	int count = 0;
 	int index = 0;
@@ -1269,22 +1251,22 @@ bool FileParser::WriteAGCRQFileToDB(int nPointNums, const vector<string>& vecFor
 			}
 
 			if(count != 0)
-				sqlToExec += ",";  //µÚÒ»²¨Êı¾İÇ°Ãæ²»ÓÃ¼Ó¶ººÅ
+				sqlToExec += ",";  //ç¬¬ä¸€æ³¢æ•°æ®å‰é¢ä¸ç”¨åŠ é€—å·
 			count++;
 			index++;
 			sqlToExec += lstSql.join(",");
 			lstSql.clear();
 
-			//Ğ´ÊµÊ±¿â\	
-			//printf("clw£ºfileType = %s\n", fileType.c_str());
-			//printf("clw£ºstrID = %s\n", strID.c_str());
+			//å†™å®æ—¶åº“\	
+			//printf("clwï¼šfileType = %s\n", fileType.c_str());
+			//printf("clwï¼šstrID = %s\n", strID.c_str());
 #ifndef WINDOWS_DEBUG	
-			bSuc2 = (bSuc2 && WriteRtdbAndConfigDB(fileType, strID));  //clw note£ºÖ»²âÊÔmysqlÊ±£¬Ğ´ÊµÊ±¿âÓÃtrue´úÌæ	
+			bSuc2 = (bSuc2 && WriteRtdbAndConfigDB(fileType, strID));  //clw noteï¼šåªæµ‹è¯•mysqlæ—¶ï¼Œå†™å®æ—¶åº“ç”¨trueä»£æ›¿	
 #else
 			bSuc2 = true;
 #endif
 		}
-		//Ö´ĞĞsql
+		//æ‰§è¡Œsql
 		bool bSuc1 = ExecSQL(sqlToExec);
 		count = 0;
 
@@ -1296,25 +1278,25 @@ bool FileParser::WriteAGCRQFileToDB(int nPointNums, const vector<string>& vecFor
 
 vector<string> FileParser::GetForcastTimes(const string& fileType, int nTimeInterval, int nPointNums)
 {
-	//±ÈÈçm_strForcastTimeÊ±¼äÊÇ201905231415£¬ËµÃ÷ÎÄ¼şÀàĞÍÊÇFILETYPE_ULTRALOAD£¬¼´³¬¶ÌÆÚ¸ººÉÔ¤²â,Ôò96µãµÄµÚÒ»Ìõ¼ÇÂ¼Ô¤²âÊ±¼äÓ¦Îª2019-05-23 14:15:00
-	//    m_strForcastTimeÊ±¼äÊÇ20190524£¬ËµÃ÷ÎÄ¼şÀàĞÍÊÇFILETYPE_SHORTLOAD£¬¼´¶ÌÆÚ¸ººÉÔ¤²â£¬Ôò96µãµÄµÚÒ»Ìõ¼ÇÂ¼Ô¤²âÊ±¼äÓ¦Îª2019-06-03 00:00:00
+	//æ¯”å¦‚m_strForcastTimeæ—¶é—´æ˜¯201905231415ï¼Œè¯´æ˜æ–‡ä»¶ç±»å‹æ˜¯FILETYPE_ULTRALOADï¼Œå³è¶…çŸ­æœŸè´Ÿè·é¢„æµ‹,åˆ™96ç‚¹çš„ç¬¬ä¸€æ¡è®°å½•é¢„æµ‹æ—¶é—´åº”ä¸º2019-05-23 14:15:00
+	//    m_strForcastTimeæ—¶é—´æ˜¯20190524ï¼Œè¯´æ˜æ–‡ä»¶ç±»å‹æ˜¯FILETYPE_SHORTLOADï¼Œå³çŸ­æœŸè´Ÿè·é¢„æµ‹ï¼Œåˆ™96ç‚¹çš„ç¬¬ä¸€æ¡è®°å½•é¢„æµ‹æ—¶é—´åº”ä¸º2019-06-03 00:00:00
 
-	//14:15:00ÊÇÍ¨¹ıÏÂÃæ¶Ôm_strForcastTimeµÄÄÚÈİ¶ÁÈ¡È»ºó´¦Àí²Ù×÷µÃµ½µÄ
-	vector<string> vecForcastTime; //clw note£º±ä³¤£¬»¹ÊÇÓÃstringÁË£¬Ö®ºó96µã´¦ÀíÔÙÓÃc_str()×ª³Échar*
+	//14:15:00æ˜¯é€šè¿‡ä¸‹é¢å¯¹m_strForcastTimeçš„å†…å®¹è¯»å–ç„¶åå¤„ç†æ“ä½œå¾—åˆ°çš„
+	vector<string> vecForcastTime; //clw noteï¼šå˜é•¿ï¼Œè¿˜æ˜¯ç”¨stringäº†ï¼Œä¹‹å96ç‚¹å¤„ç†å†ç”¨c_str()è½¬æˆchar*
 	QDateTime forcastTime;
-	QString firstPointTime; //×¼±¸´æÈë¼Æ»®ÇúÏßµÚÒ»¸öµãµÄÊ±¼ä£¬Èç2019-05-30 00:00:00
+	QString firstPointTime; //å‡†å¤‡å­˜å…¥è®¡åˆ’æ›²çº¿ç¬¬ä¸€ä¸ªç‚¹çš„æ—¶é—´ï¼Œå¦‚2019-05-30 00:00:00
 
-	//¶ÌÆÚÔ¤²â»òÈÕÇ°¼Æ»®£¬×éÖ¯Ê±¼ä¸ñÊ½Îªµ±ÌìÊ±¼ä+00:00:00
+	//çŸ­æœŸé¢„æµ‹æˆ–æ—¥å‰è®¡åˆ’ï¼Œç»„ç»‡æ—¶é—´æ ¼å¼ä¸ºå½“å¤©æ—¶é—´+00:00:00
 	if(fileType == FILETYPE_SHORTLOAD || fileType == FILETYPE_SHORTLOAD1 || fileType == FILETYPE_SHORTXNY || fileType == FILETYPE_AGCRQ)  
 	{
-		//forcastTime = curTime.addDays(1);//µ±Ç°Ê±¼ä+1Ìì£¬Ö®ºó»áÓÃµ½Õâ¸öÄêÔÂÈÕ
-		m_strForcastTime.append(" 00:00:15"); //×¢Òâ£¬ÈÕÇ°Ò»°ãÊÇ´Ó00:15¿ªÊ¼µ½24:00£¬¹²96µã£»
+		//forcastTime = curTime.addDays(1);//å½“å‰æ—¶é—´+1å¤©ï¼Œä¹‹åä¼šç”¨åˆ°è¿™ä¸ªå¹´æœˆæ—¥
+		m_strForcastTime.append(" 00:00:15"); //æ³¨æ„ï¼Œæ—¥å‰ä¸€èˆ¬æ˜¯ä»00:15å¼€å§‹åˆ°24:00ï¼Œå…±96ç‚¹ï¼›
 		m_strForcastTime.insert(6, '-');
 		m_strForcastTime.insert(4, '-');
 		forcastTime = QDateTime::fromString(m_strForcastTime, "yyyy-MM-dd hh:mm:ss");
 
 	}
-	//³¬¶ÌÆÚÔ¤²â»òÈÕÄÚ¼Æ»®£¬×éÖ¯Ê±¼ä¸ñÊ½Îªµ±ÌìÊ±¼ä+  hh:mm:00£¬mmÒ»°ãÊÇ15£¬30£¬45»ò00£¬¼´15·ÖÖÓÒ»¸öµã£»
+	//è¶…çŸ­æœŸé¢„æµ‹æˆ–æ—¥å†…è®¡åˆ’ï¼Œç»„ç»‡æ—¶é—´æ ¼å¼ä¸ºå½“å¤©æ—¶é—´+  hh:mm:00ï¼Œmmä¸€èˆ¬æ˜¯15ï¼Œ30ï¼Œ45æˆ–00ï¼Œå³15åˆ†é’Ÿä¸€ä¸ªç‚¹ï¼›
 	else if(fileType == FILETYPE_ULTRALOAD || fileType == FILETYPE_ULTRAXNY || fileType == FILETYPE_AGCRN)
 	{
 		m_strForcastTime.append(":00");
@@ -1325,9 +1307,9 @@ vector<string> FileParser::GetForcastTimes(const string& fileType, int nTimeInte
 		forcastTime = QDateTime::fromString(m_strForcastTime, "yyyy-MM-dd hh:mm:ss");
 	}
 
-	for(int i = 0; i < nPointNums; ++i) //nPointNumsÒ»°ãÎª48»ò96£¬½«ÕâÃ´¶àµãµÄÊ±¼äÖµĞ´Èëvec
+	for(int i = 0; i < nPointNums; ++i) //nPointNumsä¸€èˆ¬ä¸º48æˆ–96ï¼Œå°†è¿™ä¹ˆå¤šç‚¹çš„æ—¶é—´å€¼å†™å…¥vec
 	{
-		QDateTime tempTime(forcastTime.addSecs(60 * nTimeInterval * i)); //nTimeIntervalÒ»°ãÎª5»ò15£¬¼´Ã¿¸ô5min»ò15minÎªÒ»¸öÊ±¼äµã£»
+		QDateTime tempTime(forcastTime.addSecs(60 * nTimeInterval * i)); //nTimeIntervalä¸€èˆ¬ä¸º5æˆ–15ï¼Œå³æ¯éš”5minæˆ–15minä¸ºä¸€ä¸ªæ—¶é—´ç‚¹ï¼›
 		firstPointTime = tempTime.toString("yyyy-MM-dd hh:mm:ss");
 		vecForcastTime.push_back(firstPointTime.toStdString());
 	}
@@ -1338,50 +1320,50 @@ vector<string> FileParser::GetForcastTimes(const string& fileType, int nTimeInte
 bool FileParser::ExecSQL(const QString& sqlToExec)
 {
 	//==============================================================================================
-	//clw note£ºÖ´ĞĞsqlÓï¾ä
-	//TODO£ºÈç¹ûÖ´ĞĞÊ§°Ü£¬ÅĞ¶ÏÊÇ·ñÊı¾İ¿â¶Ï¿ª£¬³¢ÊÔÖØÁ¬
-	//²¢ÇÒÈç¹ûÁ¬²»ÉÏ£¬Ó¦¸ÃÏÈ°ÑsqlÒÔ¶ş½øÖÆ¸ñÊ½Èç.DAT£¬´æÔÚ´ÅÅÌÖĞ
+	//clw noteï¼šæ‰§è¡Œsqlè¯­å¥
+	//TODOï¼šå¦‚æœæ‰§è¡Œå¤±è´¥ï¼Œåˆ¤æ–­æ˜¯å¦æ•°æ®åº“æ–­å¼€ï¼Œå°è¯•é‡è¿
+	//å¹¶ä¸”å¦‚æœè¿ä¸ä¸Šï¼Œåº”è¯¥å…ˆæŠŠsqlä»¥äºŒè¿›åˆ¶æ ¼å¼å¦‚.DATï¼Œå­˜åœ¨ç£ç›˜ä¸­
 	//==============================================================================================
 	QSqlQuery query = QSqlQuery(g_pDB_His1);
 	if(!query.exec(sqlToExec))
 	{
 		if(g_IsDebug)
 		{
-			printf("Ö´ĞĞmysqlÊ§°Ü: %s \n", sqlToExec.toLatin1().data());
+			printf("æ‰§è¡Œmysqlå¤±è´¥: %s \n", sqlToExec.toLatin1().data());
 			string logInfo = "Fails to execute sql: " + sqlToExec.toStdString() + "\n" ;
 			char *pSQL = logInfo.c_str();
-			WriteDailyLog(true, "clw£ºÖ´ĞĞmysql:%sÊ§°Ü£¡", pSQL);
-			//WriteDailyLog(true, "clw£ºÖ´ĞĞmysqlÊ§°Ü");
+			WriteDailyLog(true, "clwï¼šæ‰§è¡Œmysql:%så¤±è´¥ï¼", pSQL);
+			//WriteDailyLog(true, "clwï¼šæ‰§è¡Œmysqlå¤±è´¥");
 
 			QString qText = query.lastError().text();
 			QByteArray ba = qText.toLocal8Bit();
 			const char* s = ba.data();
-			printf("[%s: %d] - %s\n", g_dbdriver.toLatin1().data(), query.lastError().number(), s); //clw note£ºÖ®Ç°Îªquery.lastError().text().toLocal8Bit().data()
+			printf("[%s: %d] - %s\n", g_dbdriver.toLatin1().data(), query.lastError().number(), s); //clw noteï¼šä¹‹å‰ä¸ºquery.lastError().text().toLocal8Bit().data()
 
 			QString qLogInfo = "[" + g_dbdriver + ": " +  QString::number(query.lastError().number()) +  "] - " + query.lastError().text();
 			WriteDailyLog(true, qLogInfo.toLatin1().data());
 		}
 
 	
-		//clw note£º
-		//printf("clw£ºÖ´ĞĞsqlÊ§°ÜµÄ´íÎóÀàĞÍÎª%d\n", query.lastError().type()); //clw note£ºÊı¾İ¿âÁ¬²»ÉÏµÄÊ±ºò·µ»ØµÄ¾ÓÈ»ÊÇ2£¬ÓëErrorType²»·û£¬ÎŞ·¨ÓÃÓÚÅĞ¶ÏÊı¾İ¿âÁ¬Í¨ĞÔ
-		//ÁíÍâQSqlQueryµÄisOpen()ºÜ¿Ó£¬ÎŞ·¨ÅĞ¶ÏÊı¾İ¿âÁ¬Í¨ĞÔ£¬¿¼ÂÇ×Ô¼ºĞ´IsHisDBConnected()·½·¨£»
+		//clw noteï¼š
+		//printf("clwï¼šæ‰§è¡Œsqlå¤±è´¥çš„é”™è¯¯ç±»å‹ä¸º%d\n", query.lastError().type()); //clw noteï¼šæ•°æ®åº“è¿ä¸ä¸Šçš„æ—¶å€™è¿”å›çš„å±…ç„¶æ˜¯2ï¼Œä¸ErrorTypeä¸ç¬¦ï¼Œæ— æ³•ç”¨äºåˆ¤æ–­æ•°æ®åº“è¿é€šæ€§
+		//å¦å¤–QSqlQueryçš„isOpen()å¾ˆå‘ï¼Œæ— æ³•åˆ¤æ–­æ•°æ®åº“è¿é€šæ€§ï¼Œè€ƒè™‘è‡ªå·±å†™IsHisDBConnected()æ–¹æ³•ï¼›
 		
-		//Èç¹û·¢ÏÖÊı¾İ¿âÃ»Á¬ÉÏ£¬³¢ÊÔÖØÁ¬
+		//å¦‚æœå‘ç°æ•°æ®åº“æ²¡è¿ä¸Šï¼Œå°è¯•é‡è¿
 		if(!g_sysModel.IsHisDBConnected())
 		{
-			printf("clw£º³¢ÊÔÖØÁ¬ÀúÊ·¿â£¡\n");
-			WriteDailyLog(true, "clw£º³¢ÊÔÖØÁ¬ÀúÊ·¿â£¡\n");
+			printf("clwï¼šå°è¯•é‡è¿å†å²åº“ï¼\n");
+			WriteDailyLog(true, "clwï¼šå°è¯•é‡è¿å†å²åº“ï¼\n");
 
 			if(g_sysModel.ReConnectDatabas())
 			{
-				printf("clw£ºÖØÁ¬³É¹¦£¬³¢ÊÔÔÙ´ÎÖ´ĞĞSql£¡\n");
-				WriteDailyLog(true, "clw£ºÖØÁ¬³É¹¦£¬³¢ÊÔÔÙ´ÎÖ´ĞĞSql£¡\n");
+				printf("clwï¼šé‡è¿æˆåŠŸï¼Œå°è¯•å†æ¬¡æ‰§è¡ŒSqlï¼\n");
+				WriteDailyLog(true, "clwï¼šé‡è¿æˆåŠŸï¼Œå°è¯•å†æ¬¡æ‰§è¡ŒSqlï¼\n");
 				if(!query.exec(sqlToExec))
 				{
 					if(g_IsDebug)
 					{
-						printf("Ö´ĞĞmysqlÊ§°Ü: %s \n", sqlToExec.toLatin1().data());
+						printf("æ‰§è¡Œmysqlå¤±è´¥: %s \n", sqlToExec.toLatin1().data());
 						string logInfo = "Fails to execute sql: " + sqlToExec.toStdString() + "\n" ;
 						WriteDailyLog(true, logInfo.c_str());
 
@@ -1393,15 +1375,15 @@ bool FileParser::ExecSQL(const QString& sqlToExec)
 				}
 				else
 				{
-					printf("clw£ºÖØÁ¬ºóÖ´ĞĞSql³É¹¦£¡\n");
-					WriteDailyLog(true, "clw£ºÖØÁ¬ºóÖ´ĞĞSql³É¹¦£¡\n");
+					printf("clwï¼šé‡è¿åæ‰§è¡ŒSqlæˆåŠŸï¼\n");
+					WriteDailyLog(true, "clwï¼šé‡è¿åæ‰§è¡ŒSqlæˆåŠŸï¼\n");
 					return true;
 				}
 			}
 			else
 			{
-				printf("clw£ºÖØÁ¬Ê§°Ü£¡\n");
-				WriteDailyLog(true, "clw£ºÖØÁ¬Ê§°Ü£¡\n");
+				printf("clwï¼šé‡è¿å¤±è´¥ï¼\n");
+				WriteDailyLog(true, "clwï¼šé‡è¿å¤±è´¥ï¼\n");
 			}
 		}
 		return false;
@@ -1410,8 +1392,8 @@ bool FileParser::ExecSQL(const QString& sqlToExec)
 	{
 		if(g_IsDebug)
 		{
-			printf("clw£ºÖ´ĞĞmysql³É¹¦£¡\n");
-			WriteDailyLog(true, "Ö´ĞĞmysql³É¹¦£¡\n");
+			printf("clwï¼šæ‰§è¡ŒmysqlæˆåŠŸï¼\n");
+			WriteDailyLog(true, "æ‰§è¡ŒmysqlæˆåŠŸï¼\n");
 		}
 	}
 	return true;
@@ -1421,16 +1403,16 @@ bool FileParser::ExecSQL(const QString& sqlToExec)
 bool FileParser::WriteRtdbAndConfigDB(const string& fileType, const string& strPlanID)
 {
 	//==============================================================================================
-	//Ğ´ÊµÊ±¿â±í
-	//µ÷ÓÃwx½Ó¿Ú£¬Ğ´ÊµÊ±¿âstationdispc±í£¨³¡Õ¾µ÷¶È¿ØÖÆĞÅÏ¢£©µÄ
-	//AGCÈÕÇ°¼Æ»®×î½ü½ÓÊÕÊ±¼ä ºÍ AGC¹ö¶¯£¨ÈÕÄÚ£©¼Æ»®×î½ü½ÓÊÕÊ±¼ä
+	//å†™å®æ—¶åº“è¡¨
+	//è°ƒç”¨wxæ¥å£ï¼Œå†™å®æ—¶åº“stationdispcè¡¨ï¼ˆåœºç«™è°ƒåº¦æ§åˆ¶ä¿¡æ¯ï¼‰çš„
+	//AGCæ—¥å‰è®¡åˆ’æœ€è¿‘æ¥æ”¶æ—¶é—´ å’Œ AGCæ»šåŠ¨ï¼ˆæ—¥å†…ï¼‰è®¡åˆ’æœ€è¿‘æ¥æ”¶æ—¶é—´
 	//==============================================================================================
 	int nStationID = GetStationIDByPlanID(strPlanID);
-	printf("clw£ºnStation = %d\n", nStationID);
+	printf("clwï¼šnStation = %d\n", nStationID);
 	if(nStationID < 0)
 	{
-		//printf("clw£º²éÑ¯ÅäÖÃ¿â±ístagcplanÊ§°Ü£¡\n");
-		WriteDailyLog(true, "clw£º²éÑ¯ÅäÖÃ¿â±ístagcplanÊ§°Ü£¡\n");
+		//printf("clwï¼šæŸ¥è¯¢é…ç½®åº“è¡¨stagcplanå¤±è´¥ï¼\n");
+		WriteDailyLog(true, "clwï¼šæŸ¥è¯¢é…ç½®åº“è¡¨stagcplanå¤±è´¥ï¼\n");
 		return false;
 	}
 
@@ -1440,35 +1422,35 @@ bool FileParser::WriteRtdbAndConfigDB(const string& fileType, const string& strP
 	fldValue.isNull = false;
 	if(fileType == FILETYPE_AGCRN)
 	{
-		//printf("clw£º×¼±¸Ğ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£º\n");
-		//printf("clw£ºnStationID = %d", nStationID);
-		WriteDailyLog(true, "clw£º×¼±¸Ğ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£º\n");
+		//printf("clwï¼šå‡†å¤‡å†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼š\n");
+		//printf("clwï¼šnStationID = %d", nStationID);
+		WriteDailyLog(true, "clwï¼šå‡†å¤‡å†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼š\n");
 		if(m_pUpdateRealACfg->UpdateDataInCfg("stationdispc", "todayagctime", nStationID, fldValue, false, true))
 		{
-			//printf("clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬todayagctime×Ö¶Î³É¹¦£¡\n");
-			WriteDailyLog(true, "clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬todayagctime×Ö¶Î³É¹¦£¡\n");
+			//printf("clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œtodayagctimeå­—æ®µæˆåŠŸï¼\n");
+			WriteDailyLog(true, "clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œtodayagctimeå­—æ®µæˆåŠŸï¼\n");
 		}
 		else
 		{
-			printf("clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬todayagctime×Ö¶ÎÊ§°Ü£¡\n");
-			WriteDailyLog(true, "clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬todayagctime×Ö¶ÎÊ§°Ü£¡\n");
+			printf("clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œtodayagctimeå­—æ®µå¤±è´¥ï¼\n");
+			WriteDailyLog(true, "clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œtodayagctimeå­—æ®µå¤±è´¥ï¼\n");
 			return false;
 		}
 	}
 	else if(fileType == FILETYPE_AGCRQ)
 	{
-		//printf("clw£º×¼±¸Ğ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£º\n");
-		//printf("clw£ºnStationID = %d", nStationID);
-		WriteDailyLog(true, "clw£º×¼±¸Ğ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£º\n");
+		//printf("clwï¼šå‡†å¤‡å†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼š\n");
+		//printf("clwï¼šnStationID = %d", nStationID);
+		WriteDailyLog(true, "clwï¼šå‡†å¤‡å†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼š\n");
 		if(m_pUpdateRealACfg->UpdateDataInCfg("stationdispc", "nextdayagctime", nStationID, fldValue, false, true))
 		{
-			//printf("clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬nextdayagctime×Ö¶Î³É¹¦£¡\n");
-			WriteDailyLog(true, "clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬nextdayagctime×Ö¶Î³É¹¦£¡\n");
+			//printf("clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œnextdayagctimeå­—æ®µæˆåŠŸï¼\n");
+			WriteDailyLog(true, "clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œnextdayagctimeå­—æ®µæˆåŠŸï¼\n");
 		}
 		else
 		{
-			printf("clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬nextdayagctime×Ö¶ÎÊ§°Ü£¡\n");
-			WriteDailyLog(true, "clw£ºĞ´ÈëÊµÊ±¿â¼°ÅäÖÃ¿âstationdispc±í£¬nextdayagctime×Ö¶ÎÊ§°Ü£¡\n");
+			printf("clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œnextdayagctimeå­—æ®µå¤±è´¥ï¼\n");
+			WriteDailyLog(true, "clwï¼šå†™å…¥å®æ—¶åº“åŠé…ç½®åº“stationdispcè¡¨ï¼Œnextdayagctimeå­—æ®µå¤±è´¥ï¼\n");
 			return false;
 		}
 	}
@@ -1478,7 +1460,7 @@ bool FileParser::WriteRtdbAndConfigDB(const string& fileType, const string& strP
 
 int FileParser::GetStationIDByPlanID(const string& strPlanID)
 {
-	/* ²âÊÔÓÃ½¨±íÓï¾ä
+	/* æµ‹è¯•ç”¨å»ºè¡¨è¯­å¥
 	SET FOREIGN_KEY_CHECKS=0;
 	-- ----------------------------
 	-- Table structure for strgcrvplan
@@ -1487,7 +1469,7 @@ int FileParser::GetStationIDByPlanID(const string& strPlanID)
 	`ID` int(11) NOT NULL,
 	`stationid` int(11) NOT NULL,
 	PRIMARY KEY (`ID`)
-	) ENGINE=InnoDB DEFAULT CHARSET=gbk COMMENT='AGCµ÷¶È¼Æ»®»ù±¾ĞÅÏ¢';
+	) ENGINE=InnoDB DEFAULT CHARSET=gbk COMMENT='AGCè°ƒåº¦è®¡åˆ’åŸºæœ¬ä¿¡æ¯';
 	*/
 
 	QString sql = QString::fromStdString("SELECT STATIONID FROM stagcplan where ID = " + strPlanID);
@@ -1504,10 +1486,10 @@ bool FileParser::MoveFileToDst(string _srcDir, string _dstDir, bool coverFileIfE
 {
 	if(g_IsDebug)
 	{
-		printf("clw£º¿ªÊ¼ÒÆ¶¯ÎÄ¼ş%s\n", _srcDir.c_str());
+		printf("clwï¼šå¼€å§‹ç§»åŠ¨æ–‡ä»¶%s\n", _srcDir.c_str());
 		printf("\n");
 		printf("\n");
-		WriteDailyLog(true, "clw£º¿ªÊ¼ÒÆ¶¯ÎÄ¼ş%s\n", _srcDir.c_str());
+		WriteDailyLog(true, "clwï¼šå¼€å§‹ç§»åŠ¨æ–‡ä»¶%s\n", _srcDir.c_str());
 	}
 
 	QString srcDir = QString::fromStdString(_srcDir);
@@ -1515,7 +1497,7 @@ bool FileParser::MoveFileToDst(string _srcDir, string _dstDir, bool coverFileIfE
 	//srcDir.replace("\\","/");
 	//dstDir.replace("\\","/");
 	QStringList qStrList = srcDir.split("/");
-	QString fileName = qStrList[qStrList.length() - 1]; //ÎÄ¼şÃû£¬Èçxxx.TXT
+	QString fileName = qStrList[qStrList.length() - 1]; //æ–‡ä»¶åï¼Œå¦‚xxx.TXT
 	if (srcDir == dstDir)
 	{
 		return true;
@@ -1526,17 +1508,17 @@ bool FileParser::MoveFileToDst(string _srcDir, string _dstDir, bool coverFileIfE
 	}
 
 	QDir dir;
-	if (!dir.exists(dstDir)) //°ÑÒÑ´¦Àí¹ıµÄTXTÍ³Ò»·Åµ½dstDirÄÚ
+	if (!dir.exists(dstDir)) //æŠŠå·²å¤„ç†è¿‡çš„TXTç»Ÿä¸€æ”¾åˆ°dstDirå†…
 	{
-		if(!dir.mkdir(dstDir)) //Èç¹ûÎÄ¼ş¼Ğ²»´æÔÚ£¬ÔòĞÂ½¨ÎÄ¼ş¼Ğ
+		if(!dir.mkdir(dstDir)) //å¦‚æœæ–‡ä»¶å¤¹ä¸å­˜åœ¨ï¼Œåˆ™æ–°å»ºæ–‡ä»¶å¤¹
 		{
-			//printf("clw£º´´½¨Â·¾¶%sÊ§°Ü£¬Çë¼ì²é£¡\n", dstDir.toLatin1().data());
-			WriteDailyLog(true, "clw£º´´½¨Â·¾¶Ê§°Ü£¬Çë¼ì²é£¡\n");
+			//printf("clwï¼šåˆ›å»ºè·¯å¾„%så¤±è´¥ï¼Œè¯·æ£€æŸ¥ï¼\n", dstDir.toLatin1().data());
+			WriteDailyLog(true, "clwï¼šåˆ›å»ºè·¯å¾„å¤±è´¥ï¼Œè¯·æ£€æŸ¥ï¼\n");
 			return false;
 		}
 	}
 
-	//ÊÇ·ñ¸²¸Ç
+	//æ˜¯å¦è¦†ç›–
 	if(coverFileIfExist)
 	{
 		if(dir.remove(dstDir + "/" + fileName))
@@ -1544,20 +1526,20 @@ bool FileParser::MoveFileToDst(string _srcDir, string _dstDir, bool coverFileIfE
 			if(g_IsDebug)
 			{
 				QString strLogInfo = dstDir + "/" + fileName;
-				printf("clw£º´æÔÚ¾ÉÎÄ¼ş%s²¢ÇÒ³É¹¦É¾³ı£¬×¼±¸Ğ´ÈëĞÂÎÄ¼ş\n", strLogInfo.toLatin1().data());
-				WriteDailyLog(true, "clw£º´æÔÚ¾ÉÎÄ¼ş%s²¢ÇÒ³É¹¦É¾³ı£¬×¼±¸Ğ´ÈëĞÂÎÄ¼ş\n", strLogInfo.toLatin1().data());
+				printf("clwï¼šå­˜åœ¨æ—§æ–‡ä»¶%så¹¶ä¸”æˆåŠŸåˆ é™¤ï¼Œå‡†å¤‡å†™å…¥æ–°æ–‡ä»¶\n", strLogInfo.toLatin1().data());
+				WriteDailyLog(true, "clwï¼šå­˜åœ¨æ—§æ–‡ä»¶%så¹¶ä¸”æˆåŠŸåˆ é™¤ï¼Œå‡†å¤‡å†™å…¥æ–°æ–‡ä»¶\n", strLogInfo.toLatin1().data());
 			}
 		}
-		//Èç¹ûÃ»ÓĞÍ¬ÃûµÄ¾ÉÎÄ¼ş£¬ÔòÉ¾³ı·µ»Øfalse£¬²»Ó°Ïì
+		//å¦‚æœæ²¡æœ‰åŒåçš„æ—§æ–‡ä»¶ï¼Œåˆ™åˆ é™¤è¿”å›falseï¼Œä¸å½±å“
 	}
 
-	//¸´ÖÆµ½ĞÂµÄÄ¿Â¼
+	//å¤åˆ¶åˆ°æ–°çš„ç›®å½•
 	if(!QFile::copy(srcDir, dstDir + "/" + fileName))
 	{
 		return false;
 	}
 
-	//É¾³ı¾ÉÎÄ¼ş
+	//åˆ é™¤æ—§æ–‡ä»¶
 	if(!QFile::remove(srcDir))
 	{
 		return false;
@@ -1568,7 +1550,7 @@ bool FileParser::MoveFileToDst(string _srcDir, string _dstDir, bool coverFileIfE
 
 void FileParser::DeleteFileByTime()
 {
-	//¶¨ÆÚÉ¾³ınÌìÇ°µÄÎÄ¼ş£¬ÔÚiniÖĞ¿ÉÅä
+	//å®šæœŸåˆ é™¤nå¤©å‰çš„æ–‡ä»¶ï¼Œåœ¨iniä¸­å¯é…
 	QString filePath = "../file/processed";
 	QDir dir;
 
@@ -1579,9 +1561,9 @@ void FileParser::DeleteFileByTime()
 	{
 		string::size_type fileNameLen = vecToDeleteFiles[i].size();
 		string::size_type nLeftUnderLinePos = vecToDeleteFiles[i].find('_'); 
-		//printf("clw£ºÏÂ»®ÏßºóÃæ×Ö·ûÎª%c\n", vecToDeleteFiles[i][nLeftUnderLinePos+1]);
+		//printf("clwï¼šä¸‹åˆ’çº¿åé¢å­—ç¬¦ä¸º%c\n", vecToDeleteFiles[i][nLeftUnderLinePos+1]);
 		while(nLeftUnderLinePos < fileNameLen && 
-			(vecToDeleteFiles[i][nLeftUnderLinePos+1] < DIGIT_ASCII_MIN || vecToDeleteFiles[i][nLeftUnderLinePos+1] > DIGIT_ASCII_MAX) /*ÏÂ»®ÏßºóÃæÈç¹û²»ÊÇÊı×Ö£¬¾Í¼ÌĞøÕÒÏÂÒ»¸öÏÂ»®Ïß*/)
+			(vecToDeleteFiles[i][nLeftUnderLinePos+1] < DIGIT_ASCII_MIN || vecToDeleteFiles[i][nLeftUnderLinePos+1] > DIGIT_ASCII_MAX) /*ä¸‹åˆ’çº¿åé¢å¦‚æœä¸æ˜¯æ•°å­—ï¼Œå°±ç»§ç»­æ‰¾ä¸‹ä¸€ä¸ªä¸‹åˆ’çº¿*/)
 		{
 			nLeftUnderLinePos = vecToDeleteFiles[i].find('_', nLeftUnderLinePos+1); 
 		}
@@ -1589,24 +1571,24 @@ void FileParser::DeleteFileByTime()
 		string::size_type nMiddleUnderLinePos = vecToDeleteFiles[i].find('_', nLeftUnderLinePos + 1); 
 		QString strFileTime;
 		if(nMiddleUnderLinePos - nLeftUnderLinePos - 1 >= 8)
-			strFileTime = QString::fromStdString(vecToDeleteFiles[i].substr(nLeftUnderLinePos + 1, nMiddleUnderLinePos - nLeftUnderLinePos - 1).substr(0, 8)); //°ÑyyyyMMddhhmm×ª»¯ÎªyyyyMMdd
+			strFileTime = QString::fromStdString(vecToDeleteFiles[i].substr(nLeftUnderLinePos + 1, nMiddleUnderLinePos - nLeftUnderLinePos - 1).substr(0, 8)); //æŠŠyyyyMMddhhmmè½¬åŒ–ä¸ºyyyyMMdd
 		else
 		{
-			WriteDailyLog(true, "clw£ºÉ¾³ıÎÄ¼şÊ±·¢ÏÖÎÄ¼şÃûÊ±¼ä¸ñÊ½²»ÕıÈ·£¬Çë¼ì²é¸ñÊ½ÎªyyyyMMdd»òyyyyMMddhhmm£¡\n");
-			printf("clw£ºÉ¾³ıÎÄ¼şÊ±·¢ÏÖÎÄ¼şÃûÊ±¼ä¸ñÊ½²»ÕıÈ·£¬Çë¼ì²é¸ñÊ½ÎªyyyyMMdd»òyyyyMMddhhmm£¡\n");
+			WriteDailyLog(true, "clwï¼šåˆ é™¤æ–‡ä»¶æ—¶å‘ç°æ–‡ä»¶åæ—¶é—´æ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·æ£€æŸ¥æ ¼å¼ä¸ºyyyyMMddæˆ–yyyyMMddhhmmï¼\n");
+			printf("clwï¼šåˆ é™¤æ–‡ä»¶æ—¶å‘ç°æ–‡ä»¶åæ—¶é—´æ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·æ£€æŸ¥æ ¼å¼ä¸ºyyyyMMddæˆ–yyyyMMddhhmmï¼\n");
 			continue;
 		}
 		long long nFileTime = strFileTime.toLongLong();
-		QDateTime curTime = QDateTime::currentDateTime();  //»ñÈ¡µ±Ç°Ê±¼ä
-		QString strCurDate = curTime.toString("yyyyMMdd"); //µ±Ç°Ê±¼ä×ª»¯Îª×Ö·û´®ÀàĞÍ£¬¸ñÊ½Îª£ºÄêÔÂÈÕÊ±·ÖÃë£¬Èç2019-05-30 14:28:15
+		QDateTime curTime = QDateTime::currentDateTime();  //è·å–å½“å‰æ—¶é—´
+		QString strCurDate = curTime.toString("yyyyMMdd"); //å½“å‰æ—¶é—´è½¬åŒ–ä¸ºå­—ç¬¦ä¸²ç±»å‹ï¼Œæ ¼å¼ä¸ºï¼šå¹´æœˆæ—¥æ—¶åˆ†ç§’ï¼Œå¦‚2019-05-30 14:28:15
 		int nCurDate = strCurDate.toInt();
 
-		if(nCurDate - nFileTime > m_nFileKeepTime) //±ÈÈçm_nFileKeepTime = 10£¬Ôò10ÌìÒÔÇ°µÄÎÄ¼ş¶¼»á±»É¾³ı£»ÕâÀïÊ±¼ä½ØÈ¡µ½day£¬·ÖÖÓºÍÃëµÄĞÅÏ¢±»ºöÂÔ
+		if(nCurDate - nFileTime > m_nFileKeepTime) //æ¯”å¦‚m_nFileKeepTime = 10ï¼Œåˆ™10å¤©ä»¥å‰çš„æ–‡ä»¶éƒ½ä¼šè¢«åˆ é™¤ï¼›è¿™é‡Œæ—¶é—´æˆªå–åˆ°dayï¼Œåˆ†é’Ÿå’Œç§’çš„ä¿¡æ¯è¢«å¿½ç•¥
 		{
 			if(dir.remove(QString::fromStdString(vecToDeleteFiles[i])))
 			{
-				//printf("clw£º¶¨ÆÚÉ¾³ıÎÄ¼ş£¬ÎÄ¼şÊ±¼äÎª%s\n", strFileTime.toLatin1().data());
-				string strLogInfo = "clw£º¶¨ÆÚÉ¾³ıÎÄ¼ş£¬ÎÄ¼şÊ±¼äÎª" + strFileTime.toStdString();
+				//printf("clwï¼šå®šæœŸåˆ é™¤æ–‡ä»¶ï¼Œæ–‡ä»¶æ—¶é—´ä¸º%s\n", strFileTime.toLatin1().data());
+				string strLogInfo = "clwï¼šå®šæœŸåˆ é™¤æ–‡ä»¶ï¼Œæ–‡ä»¶æ—¶é—´ä¸º" + strFileTime.toStdString();
 				WriteDailyLog(true, strLogInfo.c_str());
 			}
 		}
@@ -1616,13 +1598,13 @@ void FileParser::DeleteFileByTime()
 
 ///////////////////////////////////////////////////////////////////////
 #ifdef _MSC_VER
-//4. ´¦ÀíÈÕÖ¾ºÍ´òÆÁ
+//4. å¤„ç†æ—¥å¿—å’Œæ‰“å±
 void FileParser::DealWithLogs(char* logLines, bool bCout, int outFreq)
 {
 	if (m_circleTimes % outFreq == 1 || m_circleTimes == 0)
 	{
 		char logs[128];
-		sprintf(logs, "¡¾FileParser¡¿ circleTimes=%d, ", m_circleTimes);
+		sprintf(logs, "ã€FileParserã€‘ circleTimes=%d, ", m_circleTimes);
 		strcat(logs, logLines);
 		WriteDailyLog(true, logs);
 		if (bCout == true)
@@ -1634,14 +1616,14 @@ void FileParser::DealWithLogs(char* logLines, bool bCout, int outFreq)
 #endif 
 ///////////////////////////////////////////////////////////////////////
 #ifdef Q_OS_LINUX
-//4. ´¦ÀíÈÕÖ¾ºÍ´òÆÁ
+//4. å¤„ç†æ—¥å¿—å’Œæ‰“å±
 void FileParser::DealWithLogs(string logLine, bool bCout, int outFreq)
 {
 	char* cLogLines = const_cast<char*>(logLine.c_str());
 	if (m_circleTimes%outFreq == 1 || m_circleTimes == 0)
 	{
 		char logs[128];
-		sprintf(logs, "¡¾FileParser¡¿ circleTimes=%d, ", m_circleTimes);
+		sprintf(logs, "ã€FileParserã€‘ circleTimes=%d, ", m_circleTimes);
 		strcat(logs, cLogLines);
 		WriteDailyLog(true, logs);
 		if (bCout == true)
